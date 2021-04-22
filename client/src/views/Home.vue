@@ -4,7 +4,7 @@
              <v-flex xs10 sm10 md9 lg9>
                   <v-card color="#2A3F54" elevation="10">
                     <v-row >
-                      <v-col cols="2">
+                      <v-col cols="2" lg="2">
                         <v-img src="@/assets/raccoon.png" max-width="80" class="mt-5 ml-5"></v-img>
                       </v-col>
                       <v-col>
@@ -15,26 +15,20 @@
                   </v-card>
 
                 <v-card class="mt-2" elevation="10" >
-                  <v-tabs v-model="tab" centered show-arrows>
+                  <v-tabs v-model="tab"  show-arrows>
                     <v-tab v-for="item in items" :key="item.tab">
                      {{ item.tab }}
                     </v-tab>
                   </v-tabs>
                   <v-tabs-items v-model="tab">
-                   <v-tab-item> 
+                   <v-tab-item eager> 
                       <Caracterizacao ref="ct" @newdataCaracterizacao="handleDataCaracterizacao($event)"/>
                    </v-tab-item>
-                   <v-tab-item>
-                      <Pergunta ref="pg" @newdataPergunta="handleDataPerguntas($event)"/>
-                   </v-tab-item>
-                   <v-tab-item>
+                   <v-tab-item eager>
                       <Respostas ref="rp" @newdataRespostas="handleDataRespostas($event)"/>
                    </v-tab-item>
-                   <v-tab-item>
-                      <Suporte ref="sp"/>
-                   </v-tab-item>
-                   <v-tab-item>
-                      <Edicao ref="ed" />
+                   <v-tab-item eager>
+                      <Suporte ref="sp" @newdataSuporte="handleDataSuporte($event)"/>
                    </v-tab-item>
                  </v-tabs-items>
               </v-card>
@@ -83,30 +77,24 @@
 </template>
 
 <script>
-import axios from 'axios';
+//import axios from 'axios';
 import Caracterizacao from '@/components/Caracterizacao';
-import Pergunta from '@/components/Pergunta';
 import Respostas from '@/components/Respostas';
 import Suporte from '@/components/Suporte';
-import Edicao from '@/components/Edicao';
 
 export default {
   components: { 
         Caracterizacao, 
-        Pergunta,
         Respostas,
-        Suporte,
-        Edicao
+        Suporte
     }, 
   data() {
     return{
       tab: null,
       items: [
         { tab: 'Caracterizacão'},
-        { tab: 'Perguntas' },
         { tab: 'Respostas'},
-        { tab: 'Suporte'},
-        { tab: 'Edição'}
+        { tab: 'Suporte'}
       ],
       questao:{
         id: '',
@@ -141,25 +129,29 @@ export default {
   methods:{
     handleDataCaracterizacao(e) {
       [this.questao.id,this.questao.study_cycle,this.questao.scholarity,this.questao.domain,this.questao.subdomain,
-      this.questao.subsubdomain,this.questao.difficulty_level,this.questao.author,this.questao.display_mode,
+      this.questao.subsubdomain, this.questao.header, this.questao.difficulty_level,this.questao.author,this.questao.display_mode,
       this.questao.answering_time,this.questao.type,this.questao.precedence,this.questao.repetitions] = e;
-    },
-    handleDataPerguntas(e) {
-      this.questao.header = e;
     },
     handleDataRespostas(e) {
       this.questao.body = e;
     },
+    handleDataSuporte(e) {
+      [this.questao.explanation,this.questao.notes,this.questao.source,this.questao.status,this.questao.language] = e;
+    },
     submit(){
-      axios.post(`http://localhost:8001/question`, this.questao)
-        .then(function(response){
-          console.log(response)
-        });
-      console.log(this.questao)
+      if(this.$refs.ct.validate() && this.$refs.rp.validate() && this.$refs.sp.validate()){
+        /*axios.post(`http://localhost:8001/question`, this.questao)
+          .then(function(response){
+            console.log(response)
+          });*/
+        console.log("Formulários Validados!")
+      }
+      else{
+        console.log('Nao e valido!')   
+      }  
     },
     reset() {
       this.$refs.ct.reset()
-      this.$refs.pg.reset()
       this.$refs.rp.reset()
     },
   }
