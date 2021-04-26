@@ -106,7 +106,7 @@
           :items="formData.body"
           disable-pagination
           :hide-default-footer="true"
-          class="trucante"
+          class="mb-5"
         >
             <template v-slot:[`item.index`]="props">{{ props.index+1 }}</template>
             <template v-slot:[`item.answer`]="{ item }">
@@ -155,9 +155,6 @@ export default {
     mounted() {
       this.addAnswer()
     },
-    created(){
-      this.$refs.form.validateRP();
-    },
     methods: {
       reset () {
         this.$refs.form.reset()
@@ -188,11 +185,3 @@ export default {
 }
 </script>
 
-<style>
-    .truncate {
-      max-width: 1px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-  </style>
