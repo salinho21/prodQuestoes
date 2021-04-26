@@ -54,18 +54,38 @@
                     </v-btn>
                   </v-btn-toggle>
 
-                  <v-btn-toggle v-model="alignment"
-                    dense class="mr-5 mb-3">
+                  <v-btn-toggle v-model="alignment" dense class="mr-5 mb-3">
                     <v-btn color="#2A3F54" class="mr-2" elevation="5">
-                      <v-icon color="white">mdi-help</v-icon>
+                      <v-icon color="white" @click="help">mdi-help</v-icon>
                     </v-btn>
 
                     <v-btn to="/" color="#29E898" elevation="5" class="">
                       <v-icon color="white">mdi-door-open</v-icon>
                     </v-btn>
+                    <v-dialog v-model="openHelp" max-width="500px">
+                      <v-card color="white">
+                        <v-card-title >
+                          <p>
+                            Gestão de Domínios
+                          </p>
+                        </v-card-title>
+                        <v-card-text>
+                          asdasdas
+                        </v-card-text>
+                        <v-card-actions>
+                          <v-btn @click="closeHelp" color="#2A3F54">
+                            <v-icon color="white">mdi-close</v-icon>
+                          </v-btn>  
+                        </v-card-actions>
+
+                      </v-card>
+                        
+                    </v-dialog>
                   </v-btn-toggle>
                 </v-row>
               </v-card>
+
+               
 
              </v-flex>
            </v-layout>    
@@ -94,6 +114,7 @@ export default {
   data() {
     return{
       tab: null,
+      openHelp: false,
       items: [
         { tab: 'Caracterizacão'},
         { tab: 'Subdomínios'},
@@ -130,17 +151,21 @@ export default {
     }
   },
   methods:{
+
     handleDataDominios(e) {
       [this.questao.id,this.questao.study_cycle,this.questao.scholarity,this.questao.domain,this.questao.subdomain,
       this.questao.subsubdomain, this.questao.header, this.questao.difficulty_level,this.questao.author,this.questao.display_mode,
       this.questao.answering_time,this.questao.type,this.questao.precedence,this.questao.repetitions] = e;
     },
+
     handleDataSubdominios(e) {
       this.questao.body = e;
     },
+
     handleDataAvaliacao(e) {
       [this.questao.explanation,this.questao.notes,this.questao.source,this.questao.status,this.questao.language] = e;
     },
+
     submit(){
       if(this.$refs.ct.validate() && this.$refs.rp.validate() && this.$refs.sp.validate()){
         /*axios.post(`http://localhost:8001/question`, this.questao)
@@ -153,11 +178,20 @@ export default {
         console.log('Nao é valido!')   
       }  
     },
+
     reset() {
       this.$refs.dm.reset()
       this.$refs.sm.reset()
       this.$refs.av.reset()
     },
+
+    help() {
+      this.openHelp = true
+    },
+
+    closeHelp() {
+      this.openHelp = false
+    }
   }
 }
 </script>

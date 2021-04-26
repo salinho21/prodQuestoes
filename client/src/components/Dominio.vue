@@ -6,7 +6,7 @@
           <v-text-field v-model="formData.id" :rules="[...rules.required,...rules.length100]" :counter="100" label="Identificador"/>
         </v-col>
       </v-row>
-      <v-row class="mt-5">
+      <v-row >
         <v-col cols="12" md="12">
           <v-textarea
                     v-model="formData.description"
@@ -22,7 +22,6 @@
           ></v-textarea>
         </v-col>
       </v-row>
-
       <v-row>
         <v-col cols="6">
           <v-text-field v-model="formData.scholarity" :rules="[...rules.required,...rules.length75]" :counter="75" label="Escolaridade"/>

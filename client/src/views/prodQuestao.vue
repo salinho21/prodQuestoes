@@ -56,13 +56,33 @@
 
                   <v-btn-toggle v-model="alignment"
                     dense class="mr-5 mb-3">
-                    <v-btn color="#2A3F54" class="mr-2" elevation="5">
+                    <v-btn color="#2A3F54" class="mr-2" elevation="5" @click="help">
                       <v-icon color="white">mdi-help</v-icon>
                     </v-btn>
 
                     <v-btn to="/" color="#29E898" elevation="5" class="">
                       <v-icon color="white">mdi-door-open</v-icon>
                     </v-btn>
+
+                    <v-dialog v-model="openHelp" max-width="500px">
+                      <v-card color="white">
+                        <v-card-title >
+                          <p>
+                            Gestão de Questões
+                          </p>
+                        </v-card-title>
+                        <v-card-text>
+                          asdasdas
+                        </v-card-text>
+                        <v-card-actions>
+                          <v-btn @click="closeHelp" color="#2A3F54">
+                            <v-icon color="white">mdi-close</v-icon>
+                          </v-btn>  
+                        </v-card-actions>
+
+                      </v-card>
+                        
+                    </v-dialog>
                   </v-btn-toggle>
                 </v-row>
               </v-card>
@@ -74,7 +94,7 @@
 </template>
 
 <script>
-//import axios from 'axios';
+import axios from 'axios';
 import Caracterizacao from '@/components/Caracterizacao'
 import Respostas from '@/components/Respostas'
 import Suporte from '@/components/Suporte'
@@ -94,6 +114,7 @@ export default {
   data() {
     return{
       tab: null,
+      openHelp: false,
       items: [
         { tab: 'Caracterizacão'},
         { tab: 'Respostas'},
@@ -130,34 +151,51 @@ export default {
     }
   },
   methods:{
+
     handleDataCaracterizacao(e) {
       [this.questao.id,this.questao.study_cycle,this.questao.scholarity,this.questao.domain,this.questao.subdomain,
       this.questao.subsubdomain, this.questao.header, this.questao.difficulty_level,this.questao.author,this.questao.display_mode,
       this.questao.answering_time,this.questao.type,this.questao.precedence,this.questao.repetitions] = e;
     },
+
     handleDataRespostas(e) {
       this.questao.body = e;
     },
+
     handleDataSuporte(e) {
       [this.questao.explanation,this.questao.notes,this.questao.source,this.questao.status,this.questao.language] = e;
     },
+
     submit(){
-      if(this.$refs.ct.validate() && this.$refs.rp.validate() && this.$refs.sp.validate()){
-        /*axios.post(`http://localhost:8001/question`, this.questao)
+      //if(this.$refs.ct.validate() && this.$refs.rp.validate() && this.$refs.sp.validate()){
+        /*axios.post(`http://localhost:8001/`, this.questao)
           .then(function(response){
             console.log(response)
           });*/
-        console.log("Formulários Validados!")
-      }
+          axios.get(`http://localhost:8001/question`)
+          .then(function(response){
+            console.log(response)
+          });
+        //console.log("Formulários Validados!")
+      /*}
       else{
         console.log('Nao e valido!')   
-      }  
+      }  */
     },
+
     reset() {
       this.$refs.ct.reset()
       this.$refs.rp.reset()
       this.$refs.sp.reset()
     },
+
+    help() {
+      this.openHelp = true
+    },
+
+    closeHelp() {
+      this.openHelp = false
+    }
   }
 }
 </script>

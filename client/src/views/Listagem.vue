@@ -1,17 +1,27 @@
 <template>
     <v-container>
         <AppHeader></AppHeader>
-        <div>
-            <NavDraw></NavDraw>
-        </div>
-        <v-row align="center" justify="space-around" class="mt-5">
+        <NavDraw></NavDraw>
+        <v-card>
+            <v-card-title>
+                fsdfds <v-btn to="/dominios" color="#2A3F54" class="white--text">
+                Domínios
+            </v-btn>
+            </v-card-title>
             <v-btn to="/dominios" color="#2A3F54" class="white--text">
-            Domínios
+                Domínios
             </v-btn>
             <v-btn to="/questao" color="#2A3F54" class="white--text">
-            Questões
+                Questões
             </v-btn>
-        </v-row>
+            <v-data-table
+                :search="search"
+                >
+                <v-row align="center" justify="space-around" class="mt-5">
+                </v-row>
+            </v-data-table>
+        </v-card>
+            
         
         <Footer class="mt-5"></Footer>
     </v-container>
@@ -24,7 +34,6 @@ import AppHeader from '@/components/AppHeader'
 import NavDraw from '@/components/NavDraw'
 import Footer from '@/components/Footer'
 export default {
-
     components: { 
         AppHeader,
         NavDraw,

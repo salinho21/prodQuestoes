@@ -47,23 +47,23 @@
         
 
       <v-row>
-        <v-col cols="12" md="4" class="mt-4">
-          <p class="grey--text text--darken-1">Nível de Dificuldade:</p>
+        <v-col cols="12" xl="2" lg="3" md="3" sm="3">
+          <p class="grey--text text--darken-1 mt-4">Nível de Dificuldade:</p>
         </v-col>
         <v-radio-group v-model="formData.difficulty_level" row mandatory >
-          <v-col cols="12" md="4" sm="4" xm="1">
+          <v-col cols="12" md="2" sm="2" xm="1">
             <v-radio label="1" value="1"/>
           </v-col>
-          <v-col cols="12" md="4" sm="4" xm="1">
+          <v-col cols="12" md="2" sm="2" xm="1">
             <v-radio label="2" value="2"/>
           </v-col>
-          <v-col cols="12" md="4" sm="4" xm="1">
+          <v-col cols="12" md="2" sm="2" xm="1">
             <v-radio label="3" value="3"/>
           </v-col>
-          <v-col cols="12" md="4" sm="4" xm="1">
+          <v-col cols="12" md="2" sm="2" xm="1">
             <v-radio label="4" value="4"/>
           </v-col>
-          <v-col cols="12" md="4" sm="4" xm="1">
+          <v-col cols="12" md="2" sm="2" xm="1">
             <v-radio label="5" value="5"/>
           </v-col>
         </v-radio-group>
@@ -76,7 +76,7 @@
       </v-row>
 
       <v-row>
-        <v-col cols="12" md="4" class="mt-4">
+        <v-col cols="12" md="2" class="mt-4">
           <p class="grey--text text--darken-1">Modo de Visualização:</p>
         </v-col>
         <v-radio-group v-model="formData.display_mode" row mandatory>
@@ -90,14 +90,14 @@
       </v-row>
 
       <v-row>
-        <v-col cols="12" sm="6">
+        <v-col cols="12" sm="4">
           <v-select v-model="formData.answering_time" clear :rules="rules.required" :items="tempos" label="Tempo de Resposta" dense/>
         </v-col>
-        <v-col cols="12" sm="6">
-          <v-select v-model="formData.type" :rules="rules.required" :items="tipos" outlined label="Tipo de Questão" dense/>
+        <v-col cols="12" sm="4">
+          <v-select v-model="formData.type" :rules="rules.required" :items="tipos" label="Tipo de Questão" dense/>
         </v-col>
-        <v-col cols="12" sm="6">
-          <v-select v-model="formData.repetitions" :rules="rules.required" :items="repeticoes" solo label="Repetições" dense/>
+        <v-col cols="12" sm="4">
+          <v-select v-model="formData.repetitions" :rules="rules.required" :items="repeticoes" label="Repetições" dense/>
         </v-col>
       </v-row>
         
