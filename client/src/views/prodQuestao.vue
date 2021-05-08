@@ -60,7 +60,7 @@
                       <v-icon color="white">mdi-help</v-icon>
                     </v-btn>
 
-                    <v-btn to="/" color="#29E898" elevation="5" class="">
+                    <v-btn to="/questoes" color="#29E898" elevation="5" class="">
                       <v-icon color="white">mdi-door-open</v-icon>
                     </v-btn>
 
@@ -167,20 +167,20 @@ export default {
     },
 
     submit(){
-      //if(this.$refs.ct.validate() && this.$refs.rp.validate() && this.$refs.sp.validate()){
-        /*axios.post(`http://localhost:8001/`, this.questao)
-          .then(function(response){
-            console.log(response)
-          });*/
-          axios.get(`http://localhost:8001/question`)
+      if(this.$refs.ct.validate() && this.$refs.rp.validate() && this.$refs.sp.validate()){
+        axios.post(`http://localhost:8001/question`, this.questao)
           .then(function(response){
             console.log(response)
           });
+          /*axios.get(`http://localhost:8001/question`)
+          .then(function(response){
+            console.log(response)
+          });*/
         //console.log("Formulários Validados!")
-      /*}
+      }
       else{
         console.log('Nao e valido!')   
-      }  */
+      }  
     },
 
     reset() {

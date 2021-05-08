@@ -1,6 +1,10 @@
 <template>
     <v-container>
         <v-form v-model="valid" ref="form">
+            <h2 class="titulo">Questão {{this.idQuestao}}</h2>
+            <p class="field ml-5">Domínio: <span class="fieldtext">{{this.domain}}</span></p>
+            <p class="field ml-5">Pergunta: <span class="fieldtext">{{this.header}}</span></p>
+            <v-divider class="mb-2"></v-divider>
             <v-row>          
                 <v-col cols="8">  
                     <h3 style="color:#2A3F54;padding-bottom:15px;">Escolha os ficheiros de imagem (png/jpg):</h3>
@@ -94,21 +98,29 @@
 export default ({
     data(){
         return{
+            idQuestao: '',
+            domain: '',
+            header: '',
             formData:{
                 explanation: '',
                 notes: '',
                 source: '',
                 status: '',
                 language: ''
-                
             },
             rules: {
                 required: [(v) => !!v || "Field is required"],
             },
-            status: ['E', '?'],
+            status: ['E'],
             language: ['Portuguese', 'English', 'Spanish', 'French'],
         }
-        
+    },
+    mounted() {
+      this.$root.$on('change', data => {
+            this.idQuestao = data.sendId
+            this.domain = data.sendDomain
+            this.header = data.sendHeader
+      })
     },
     methods: {
       reset () {
@@ -130,3 +142,15 @@ export default ({
     
 })
 </script>
+
+<style scoped>
+  h2.titulo{
+    color:#2A3F54;
+  }
+  p.field{
+    color:#2A3F54;
+  }
+  span.fieldtext{
+    color:black;
+  }
+</style>

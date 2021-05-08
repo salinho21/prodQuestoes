@@ -59,7 +59,7 @@
                       <v-icon color="white" @click="help">mdi-help</v-icon>
                     </v-btn>
 
-                    <v-btn to="/" color="#29E898" elevation="5" class="">
+                    <v-btn to="/dominios" color="#29E898" elevation="5" class="">
                       <v-icon color="white">mdi-door-open</v-icon>
                     </v-btn>
                     <v-dialog v-model="openHelp" max-width="500px">
@@ -84,8 +84,6 @@
                   </v-btn-toggle>
                 </v-row>
               </v-card>
-
-               
 
              </v-flex>
            </v-layout>    

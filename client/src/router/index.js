@@ -1,27 +1,33 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Questao from '../views/prodQuestao.vue'
-import Dominios from '../views/prodDominios.vue'
-import Listagem from '../views/Listagem.vue'
+import Dominios from '../views/Dominios.vue'
+import ProdQuestao from '../views/ProdQuestao.vue'
+import ProdDominio from '../views/ProdDominio.vue'
+import Questoes from '../views/Questoes.vue'
 
 Vue.use(VueRouter)
 
 const routes = [
   {
-    path: '/',
-    name: 'Listagem',
-    component: Listagem
-  },
-  {
-    path: '/questao',
-    name: 'Questao',
-    component: Questao
-  },
-  {
     path: '/dominios',
     name: 'Dominios',
     component: Dominios
-  }
+  },
+  {
+    path: '/prodQuestao',
+    name: 'ProdQuestao',
+    component: ProdQuestao
+  },
+  {
+    path: '/prodDominio',
+    name: 'ProdDominio',
+    component: ProdDominio
+  },
+  {
+    path: '/questoes',
+    name: 'Questoes',
+    component: Questoes
+  },
 ]
 
 const router = new VueRouter({

@@ -3,10 +3,13 @@
     <v-container>
       <v-row>
         <v-col cols="6">
-          <v-text-field v-model="formData.id" :rules="[...rules.required,...rules.length100]" :counter="100" label="Identificador"/>
+          <v-text-field v-model="formData.id" 
+            :rules="[...rules.required,...rules.length100]" 
+            :counter="100" label="Identificador"
+            :input="onChange()"/>
         </v-col>
       </v-row>
-      <v-row >
+      <v-row>
         <v-col cols="12" md="12">
           <v-textarea
                     v-model="formData.description"
@@ -19,6 +22,7 @@
                     rows="3"
                     :rules="rules.required"
                     placeholder="Insira uma Descrição"
+                    :input="onChange()"
           ></v-textarea>
         </v-col>
       </v-row>
@@ -69,6 +73,10 @@
   export default {
     data() {
       return{
+        sendObject:{
+          sendId:'',
+          sendDescription: '',
+        },
         valid: false,
         formData:{
             id: '',
@@ -93,6 +101,11 @@
       },
       validate() {
         return this.$refs.form.validate()
+      },
+      onChange(){
+        this.sendObject.sendId = this.formData.id
+        this.sendObject.sendDescription = this.formData.description
+        this.$root.$emit('change',this.sendObject)
       }
     },
     watch: {

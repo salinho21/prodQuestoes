@@ -1,9 +1,16 @@
 <template>
     <v-container>
         <v-form v-model="valid" ref="form" >
+            <v-card elevation="3">
+                <h2 class="titulo mb-4 ml-3">Domínio {{this.idDominio}}</h2>
+                <p class="field ml-5">Descrição: <span class="fieldtext">{{this.description}}</span></p>
+                <v-divider></v-divider>
+            </v-card>
+                    
                 <v-row>
                     <v-col cols="8">
                         <v-text-field
+                        class="mt-4"
                         v-model="subdominio.designation"
                         :rules="rules.required"
                         :counter="200"
@@ -134,6 +141,8 @@
 export default {
     data() {
         return {
+            idDominio: '',
+            description: '',
             editedIndex: -1,
             editing: false,
             dialogEdit: false,
@@ -166,6 +175,12 @@ export default {
             ],
         }
     },
+    mounted() {
+      this.$root.$on('change', data => {
+            this.idDominio = data.sendId
+            this.description = data.sendDescription
+      })
+    },
 
     methods: {
 
@@ -179,7 +194,7 @@ export default {
 
       addSubdominio(){
         this.formData.body.push(this.subdominio);
-        this.subdominio = Object.assign({}, this.defaultItem)
+        this.subdominio = Object.assign({}, this.defaultSub)
       },
 
       editItem (item) {
@@ -195,6 +210,7 @@ export default {
 
       editConfirm() {
         this.$set(this.formData.body, this.editedIndex, this.subdominio)
+        this.subdominio = Object.assign({}, this.defaultSub)
         this.dialogEdit = false
       },
 
@@ -205,7 +221,7 @@ export default {
 
       close () {
         this.dialog = false
-        this.subdominio = Object.assign({}, this.defaultItem)
+        this.subdominio = Object.assign({}, this.defaultSub)
         this.editedIndex = -1
       },
 
@@ -227,10 +243,21 @@ export default {
             },
             deep: true
         },
-
         dialogDelete (val) {
             val || this.closeDelete()
         },
       },
 }
 </script>
+
+<style scoped>
+  h2.titulo{
+    color:#2A3F54;
+  }
+  p.field{
+    color:#2A3F54;
+  }
+  span.fieldtext{
+    color:black;
+  }
+</style>

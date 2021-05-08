@@ -1,9 +1,12 @@
 <template>
-  <v-form v-model="valid" ref="form">
+  <v-form v-model="valid" ref="form" >
     <v-container>
       <v-row>
         <v-col cols="12" md="4">
-          <v-text-field v-model="formData.id" :rules="[...rules.required,...rules.length30]" :counter="30" label="Identificador"/>
+          <v-text-field v-model="formData.id" 
+            :rules="[...rules.required,...rules.length30]" 
+            :counter="30" label="Identificador" 
+            :input="onChange()"/>
         </v-col>
 
         <v-col cols="12" md="4" >
@@ -17,7 +20,12 @@
 
       <v-row>
         <v-col cols="12" md="4">
-          <v-text-field v-model="formData.domain" :rules="[...rules.required,...rules.length100]" :counter="100" label="Domínio"/>
+          <v-text-field v-model="formData.domain"
+            :rules="[...rules.required,...rules.length100]" 
+            :counter="100" 
+            label="Domínio"
+            :input="onChange()"
+          />
         </v-col>
 
         <v-col cols="12" md="4">
@@ -41,6 +49,7 @@
                     color="#2A3F54"
                     :rules="rules.required"
                     placeholder="Insira a Pergunta"
+                    :input="onChange()"
           ></v-textarea>
         </v-col>
       </v-row>
@@ -113,8 +122,13 @@
 
 <script>
   export default {
-    data() {
+    data() {    
       return{
+        sendObject:{
+          sendId:'',
+          sendDomain: '',
+          sendHeader: '',
+        },
         valid: false,
         formData:{
             id: '',
@@ -132,14 +146,12 @@
             precedence: [],
             repetitions: ''
           },
-
         rules: {
             required: [(v) => !!v || "Field is required"],
             length30: [v => (v && v.length <= 30) || "Field must be less or equal than 30 characters"],
             length75: [v => (v && v.length <= 75) || "Field must be less or equal than 75 characters"],
             length100: [v => (v && v.length <= 100) || "Field must be less or equal than 100 characters"],
         },
-             
         tempos: ['30', '45', '60'],
         tipos: ['1', '2', '3'],
         repeticoes: ['1', '2', '3']
@@ -151,6 +163,12 @@
       },
       validate() {
         return this.$refs.form.validate()
+      },
+      onChange(){
+        this.sendObject.sendId = this.formData.id
+        this.sendObject.sendDomain = this.formData.domain
+        this.sendObject.sendHeader = this.formData.header
+        this.$root.$emit('change',this.sendObject)
       }
     },
     watch: {
@@ -159,10 +177,9 @@
               this.$emit('newdataCaracterizacao', [this.formData.id,this.formData.study_cycle,this.formData.scholarity,this.formData.domain,
               this.formData.subdomain,this.formData.subsubdomain,this.formData.header,this.formData.difficulty_level,this.formData.author,
               this.formData.display_mode,this.formData.answering_time,this.formData.type,this.formData.precedence,this.formData.repetitions]);
-             
           },
             deep: true
-        }
+        },
       }   
   }
 </script>
