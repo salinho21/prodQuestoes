@@ -106,47 +106,47 @@
               </v-row>
 
               <v-row>
-        <v-col cols="6" xl="2" lg="3" md="3" sm="6" class="mt-4">
-          <p class="grey--text text--darken-1">Resposta Correta:</p>
-        </v-col>
-        <v-col cols="6" lg="3" md="3" sm="6">
-          <v-radio-group v-model="resposta.correction" row mandatory>
-            <v-radio label="0" value="0"></v-radio>
+                <v-col cols="6" xl="2" lg="3" md="3" sm="6" class="mt-4">
+                  <p class="grey--text text--darken-1">Resposta Correta:</p>
+                </v-col>
+                <v-col cols="6" lg="3" md="3" sm="6">
+                  <v-radio-group v-model="resposta.correction" row mandatory>
+                    <v-radio label="0" value="0"></v-radio>
 
-            <v-radio label="1" value="1"></v-radio>
+                    <v-radio label="1" value="1"></v-radio>
 
-          </v-radio-group>
-        </v-col>
-        <v-col xl="2" lg="3" md="3" sm="6" class="mt-4">
-          <p class="grey--text text--darken-1">Resposta Obrigatória:</p>
-        </v-col>
-        <v-col lg="3" md="3" sm="6">
-          <v-radio-group v-model="resposta.mandatory" row mandatory>
+                  </v-radio-group>
+                </v-col>
+                <v-col xl="2" lg="3" md="3" sm="6" class="mt-4">
+                  <p class="grey--text text--darken-1">Resposta Obrigatória:</p>
+                </v-col>
+                <v-col lg="3" md="3" sm="6">
+                  <v-radio-group v-model="resposta.mandatory" row mandatory>
 
-            <v-radio label="0" value="0"></v-radio>
+                    <v-radio label="0" value="0"></v-radio>
 
-            <v-radio label="1" value="1"></v-radio>
+                    <v-radio label="1" value="1"></v-radio>
 
-          </v-radio-group>
-        </v-col>
-      </v-row>
+                  </v-radio-group>
+                </v-col>
+              </v-row>
 
-      <v-row>
-        <v-col xl="2" lg="3" md="3" sm="4" class="mt-4">
-          <p class="grey--text text--darken-1">Resposta Eliminatória:</p>
-        </v-col>
-        <v-col lg="3" md="3" sm="6">
-          <v-radio-group v-model="resposta.eliminative" row mandatory>
+              <v-row>
+                <v-col xl="2" lg="3" md="3" sm="4" class="mt-4">
+                  <p class="grey--text text--darken-1">Resposta Eliminatória:</p>
+                </v-col>
+                <v-col lg="3" md="3" sm="6">
+                  <v-radio-group v-model="resposta.eliminative" row mandatory>
 
-            <v-radio label="0" value="0"></v-radio>
+                    <v-radio label="0" value="0"></v-radio>
 
-            <v-radio label="1" value="1"></v-radio>
-          </v-radio-group>
-        </v-col>
-        <v-col cols="6">
-          <v-select :items="pontos" v-model="resposta.points" label="Pontos" dense></v-select>
-        </v-col>
-      </v-row>
+                    <v-radio label="1" value="1"></v-radio>
+                  </v-radio-group>
+                </v-col>
+                <v-col cols="6">
+                  <v-select :items="pontos" v-model="resposta.points" label="Pontos" dense></v-select>
+                </v-col>
+              </v-row>
             </v-card-text>
             <v-card-actions>                               
               <v-spacer></v-spacer>
@@ -208,7 +208,17 @@ export default {
             ],
         }
     },
-
+    created() {
+      if(this.$route.params.data!=null){
+        console.log("Edição de questão")
+        console.log(this.$route.params.data)
+        let data = this.$route.params.data
+            this.formData.body = data.body         
+      }else{
+        console.log("Nova questão")
+      }
+        
+    },
     mounted() {
       this.$root.$on('change', data => {
             this.idQuestao = data.sendId

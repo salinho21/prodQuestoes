@@ -1,10 +1,12 @@
 <template>
     <v-container>
         <v-form v-model="valid" ref="form">
-            <h2 class="titulo">Questão {{this.idQuestao}}</h2>
-            <p class="field ml-5">Domínio: <span class="fieldtext">{{this.domain}}</span></p>
-            <p class="field ml-5">Pergunta: <span class="fieldtext">{{this.header}}</span></p>
-            <v-divider class="mb-2"></v-divider>
+            <v-card elevation="3" class="mb-5">
+                <h2 class="titulo mb-4 ml-3">Questão {{this.idQuestao}}</h2>
+                <p class="field ml-5">Domínio: <span class="fieldtext">{{this.domain}}</span></p>
+                <p class="field ml-5">Pergunta: <span class="fieldtext">{{this.header}}</span></p>
+                <v-divider></v-divider>
+            </v-card>
             <v-row>          
                 <v-col cols="8">  
                     <h3 style="color:#2A3F54;padding-bottom:15px;">Escolha os ficheiros de imagem (png/jpg):</h3>
@@ -114,6 +116,20 @@ export default ({
             status: ['E'],
             language: ['Portuguese', 'English', 'Spanish', 'French'],
         }
+    },
+    created() {
+      if(this.$route.params.data!=null){
+        console.log("Edição de questão")
+        console.log(this.$route.params.data)
+        let data = this.$route.params.data
+            this.formData.explanation = data.explanation
+            this.formData.notes = data.notes
+            this.formData.source = data.source
+            this.formData.status = data.status
+            this.formData.language = data.language   
+      }else{
+        console.log("Nova questão")
+      }
     },
     mounted() {
       this.$root.$on('change', data => {

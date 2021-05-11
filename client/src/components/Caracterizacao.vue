@@ -2,6 +2,7 @@
   <v-form v-model="valid" ref="form" >
     <v-container>
       <v-row>
+        {{this.randomdata}}
         <v-col cols="12" md="4">
           <v-text-field v-model="formData.id" 
             :rules="[...rules.required,...rules.length30]" 
@@ -124,6 +125,7 @@
   export default {
     data() {    
       return{
+        randomdata: '',
         sendObject:{
           sendId:'',
           sendDomain: '',
@@ -154,8 +156,31 @@
         },
         tempos: ['30', '45', '60'],
         tipos: ['1', '2', '3'],
-        repeticoes: ['1', '2', '3']
+        repeticoes: ['0','1', '2', '3']
       }  
+    },
+    created() {
+      if(this.$route.params.data!=null){
+        console.log("Edição de questão")
+        console.log(this.$route.params.data)
+        let data = this.$route.params.data
+            this.formData.id = data.id
+            this.formData.study_cycle = data.study_cycle
+            this.formData.scholarity = data.scholarity
+            this.formData.domain = data.domain
+            this.formData.subdomain = data.subdomain
+            this.formData.subsubdomain = data.subsubdomain
+            this.formData.header = data.header
+            this.formData.difficulty_level = data.difficulty_level
+            this.formData.author = data.author
+            this.formData.display_mode = data.display_mode
+            this.formData.repetitions = data.repetitions
+            this.formData.answering_time = data.answering_time
+            this.formData.type = data.type
+            this.formData.precedence = data.precedence            
+      }else{
+        console.log("Nova questão")
+      }
     },
     methods: {
       reset () {

@@ -150,6 +150,11 @@ export default {
       }
     }
   },
+  /*mounted(){
+    this.$root.$on('edit', data => { 
+      console.log(data.id)   
+    })
+  },*/
   methods:{
 
     handleDataCaracterizacao(e) {
@@ -172,11 +177,6 @@ export default {
           .then(function(response){
             console.log(response)
           });
-          /*axios.get(`http://localhost:8001/question`)
-          .then(function(response){
-            console.log(response)
-          });*/
-        //console.log("Formulários Validados!")
       }
       else{
         console.log('Nao e valido!')   

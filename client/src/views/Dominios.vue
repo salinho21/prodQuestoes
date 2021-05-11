@@ -1,61 +1,59 @@
 <template>
-    <v-container>
-        <AppHeader></AppHeader>
-        <NavDraw></NavDraw>
-        <v-card>
-            <v-data-table
-                :headers="headers"
-                :items="navQuestoes"
-                :items-per-page="15"
-                :search="search"
-                multi-sort       
-            >
-                <template v-slot:top>
-                    <v-toolbar>
-                        <v-toolbar-title class>Preparação de Questões</v-toolbar-title>
-                        <v-spacer></v-spacer>
+  <v-container>
+    <AppHeader></AppHeader>
+    <NavDraw></NavDraw>
+    <v-card>
+      <v-data-table :headers="headers" :items="navQuestoes" :items-per-page="15" :search="search" multi-sort>
+        <template v-slot:top>
+          <v-toolbar>
+            <v-toolbar-title class>Preparação de Domínios</v-toolbar-title>
+            <v-spacer></v-spacer>
 
-                        <!-- Barra de Pesquisa -->
-                        <v-text-field
-                        v-model="search"
-                        append-icon="mdi-magnify"
-                        label="Pesquisa"
-                        single-line
-                        hide-details
-                        class="mr-5"
-                        ></v-text-field>
-                        <v-btn to="/prodDominios" color="#2A3F54" class="white--text">
-                            <v-icon>mdi-text-box-plus-outline</v-icon>
-                        </v-btn>
-                    </v-toolbar>
-                </template>
-            <!-- Definição dos headers -->
-
-                <template v-slot:[`item.options`]="{ }">
-                    <v-icon
-                        small
-                        class="mr-2"            
-                    >
-                        icon MDI
-                    </v-icon>
-                </template>
-
-                <template v-slot:[`item.actions`]="{ item }">
-                    <v-icon small class="mr-2" @click="editItem(item)">mdi-eye</v-icon>
-                    <v-icon small class="mr-2" @click="editItem(item)">mdi-pencil</v-icon>
-                    <v-icon small to="/questao" @click="deleteItem(item)">mdi-delete</v-icon>
-                </template> 
-            </v-data-table>
-        </v-card>
-            <v-btn to="/dominios" color="#2A3F54" class="white--text">
-                Domínios
+            <v-text-field v-model="search" append-icon="mdi-magnify" label="Pesquisa" single-line hide-details class="mr-5"></v-text-field>
+            <v-btn to="/prodQuestao" color="#2A3F54" class="white--text">
+              <v-icon>mdi-text-box-plus-outline</v-icon>
             </v-btn>
-            <v-btn to="/questao" color="#2A3F54" class="white--text">
-                Questões
-            </v-btn>
-        
-        <Footer class="mt-5"></Footer>
-    </v-container>
+          </v-toolbar>
+        </template>
+        <template v-slot:[`item.actions`]="{ item }">
+          <v-icon small class="mr-2" @click="showItem()">mdi-eye</v-icon>
+          <router-link to="/prodQuestao">
+            <v-icon small class="mr-2">mdi-pencil</v-icon>
+          </router-link>
+          <v-icon small @click="deleteItem(item)">mdi-delete</v-icon>
+        </template>
+      </v-data-table>
+      <v-dialog v-model="dialogShow" max-width="500px">
+          <v-card>
+            <v-card-title class="headline">Are you sure you want to delete this item?</v-card-title>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="blue darken-1" text @click="closeShow">Cancel</v-btn>
+              <v-spacer></v-spacer>
+            </v-card-actions>
+          </v-card>
+       </v-dialog>
+      <v-dialog v-model="dialogDelete" max-width="500px">
+          <v-card>
+            <v-card-title class="headline">Are you sure you want to delete this item?</v-card-title>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
+              <v-btn color="blue darken-1" text @click="deleteConfirm">OK</v-btn>
+              <v-spacer></v-spacer>
+            </v-card-actions>
+          </v-card>
+       </v-dialog>
+    </v-card>
+    <v-btn to="/prodDominio" color="#2A3F54" class="white--text">
+      Domínios
+    </v-btn>
+    <v-btn to="/prodQuestao" color="#2A3F54" class="white--text">
+      Questões
+    </v-btn>
+
+    <Footer class="mt-5"></Footer>
+  </v-container>
 </template>
 
 <script>
@@ -72,6 +70,9 @@ export default {
     }, 
     data(){
         return{
+            itemIndex: -1,
+            dialogShow: false,
+            dialogDelete: false,
             headers: [
                 { text: "Identificador", sortable: false, value: "id", class: "white--text"},
                 { text: "Domínio",  sortable: false, value: "domain", class: "white--text" },
@@ -80,22 +81,11 @@ export default {
                 { text: "Data Criação", sortable: false, value: "inserted_at", class: "white--text"},
                 { text: "Opções", sortable: false, value: "actions", class: "white--text"},
             ],
-            desserts: [
-                {
-                    name: 'Frozen Yogurt',
-                    calories: 159,
-                    fat: 6.0,
-                    carbs: 24,
-                    protein: 4.0,
-                    iron: '1%',
-                }
-            ],
             search:'',
-            navArray: [],
             navQuestoes: [],
         }
     },
-    mounted(){
+    created(){
         axios.get(`http://localhost:8001/question`)
           .then((response)=>{
             this.navQuestoes=response.data
@@ -103,20 +93,32 @@ export default {
           },(error) =>{
               console.log(error);
           });
-        ////console.log(value);
-           /* const navObj ={
-                id = arrayItem.id,
-                Dominio = arrayItem.domain,
-                SubDominio = arrayItem.subdomain,
-                Autor = arrayItem.author,
-                DataCriacao = arrayItem.inserted_at
-            }
-            this.navArray.push(navObj);
-        */
-
-        //}); 
-
     },
+    methods: {
+      showItem () {
+        this.dialogShow = true
+      },
+
+      closeShow(){
+        this.dialogShow = false
+      },
+
+      deleteItem(item){
+        this.itemIndex = this.navQuestoes.indexOf(item)
+        this.dialogDelete = true
+      },     
+
+      deleteConfirm(){
+        this.navQuestoes.splice(this.itemIndex, 1)
+        this.closeDelete()
+      },
+
+      closeDelete(){
+        this.dialogDelete = false
+        this.itemIndex = -1
+      }
+    },
+
 }
 </script>
 <style scoped>
@@ -132,5 +134,7 @@ export default {
     .v-data-table /deep/ tr:nth-child(even){
         background-color: rgb(245, 245, 245);
     }
+
+    a { text-decoration: none; }
 
 </style>
