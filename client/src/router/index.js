@@ -4,7 +4,7 @@ import Dominios from '../views/Dominios.vue'
 import ProdQuestao from '../views/ProdQuestao.vue'
 import ProdDominio from '../views/ProdDominio.vue'
 import Questoes from '../views/Questoes.vue'
-import Test from '../views/test.vue'
+
 
 Vue.use(VueRouter)
 
@@ -33,11 +33,6 @@ const routes = [
     path: '/questoes',
     name: 'Questoes',
     component: Questoes
-  },
-  {
-    path: '/test',
-    name: 'Test',
-    component: Test
   }
 ]
 
