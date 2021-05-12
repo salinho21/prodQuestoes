@@ -3,44 +3,291 @@
     <AppHeader></AppHeader>
     <NavDraw></NavDraw>
     <v-card>
-      <v-data-table :headers="headers" :items="navQuestoes" :items-per-page="15" :search="search" multi-sort>
+      <v-data-table :headers="headers" 
+        :items="navQuestoes" 
+        :items-per-page="15" 
+        :search="search" 
+        :sort-by="[]"
+        multi-sort>
         <template v-slot:top>
           <v-toolbar>
             <v-toolbar-title class>Preparação de Domínios</v-toolbar-title>
             <v-spacer></v-spacer>
 
             <v-text-field v-model="search" append-icon="mdi-magnify" label="Pesquisa" single-line hide-details class="mr-5"></v-text-field>
-            <v-btn to="/prodQuestao" color="#2A3F54" class="white--text">
+            <v-btn to="/prodQuestao" color="#2A3F54" class="white--text mr-4">
               <v-icon>mdi-text-box-plus-outline</v-icon>
+            </v-btn>
+            <v-btn  color="#2A3F54" class="white--text">
+              <v-icon>mdi-printer</v-icon>
             </v-btn>
           </v-toolbar>
         </template>
         <template v-slot:[`item.actions`]="{ item }">
-          <v-icon small class="mr-2" @click="showItem()">mdi-eye</v-icon>
-          <router-link to="/prodQuestao">
-            <v-icon small class="mr-2">mdi-pencil</v-icon>
-          </router-link>
+          <v-icon small class="mr-2" @click="showItem(item)">mdi-eye</v-icon>
+
+          <v-icon small class="mr-2" @click="sendItem(item)">mdi-pencil</v-icon>
+
           <v-icon small @click="deleteItem(item)">mdi-delete</v-icon>
         </template>
       </v-data-table>
-      <v-dialog v-model="dialogShow" max-width="500px">
+      <v-dialog v-model="dialogShow" max-width="900px">
           <v-card>
-            <v-card-title class="headline">Are you sure you want to delete this item?</v-card-title>
+            <v-app-bar color="#2A3F54" >
+              <div class="d-flex align-center">
+                <h3 width="40" class="white--text"> QUESTÃO - {{this.questao.id}} </h3>
+              </div>
+            </v-app-bar>
+            <v-container>
+              <v-row>
+                <v-col cols="2">
+                  <v-card class="ml-4 mt-1" color="white" flat height="100px" width="110px" >
+                      <v-img src="@/assets/questionmark.png"/>
+                  </v-card>
+                </v-col>
+                
+                
+                <v-col cols="8">
+                  <dl>
+                    <dt class="title">Pergunta</dt>
+                    <dd class="ml-5">{{this.questao.header}}</dd>
+                  </dl>
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col cols="12">
+                  <v-expansion-panels focusable>
+                    <v-expansion-panel
+                      v-for="(item,i) in questao.body"
+                      :key="i"
+                    >
+                      <v-expansion-panel-header>Resposta {{i+1}}</v-expansion-panel-header>
+                      <v-expansion-panel-content>
+                          <h4>Texto da Resposta:</h4> <span>{{item.answer}}</span>
+                          <h4>Resposta Correta:</h4> 
+                          <span v-if="item.correction == 0">Falso</span><span v-else>Verdadeiro</span>
+                          <h4>Resposta Obrigatória:</h4> 
+                          <span v-if="item.mandatory == 0">Falso</span><span v-else>Verdadeiro</span>
+                          <h4>Resposta Eliminativa:</h4> 
+                          <span v-if="item.eliminative == 0">Falso</span><span v-else>Verdadeiro</span>
+                          <h4>Pontos:</h4> <span>{{item.points}}</span>
+
+                      </v-expansion-panel-content>
+                    </v-expansion-panel>
+                  </v-expansion-panels>
+                </v-col>
+              </v-row>  
+              <v-row>
+                <v-col cols="4">
+                  <dl>
+                    <dt class="title">Domínio</dt>
+                    <dd class="ml-5">{{this.questao.domain}}</dd>
+                  </dl>
+                </v-col>
+                 <v-col cols="4">
+                  <dl>
+                    <dt class="title">Subdomínio</dt>
+                    <dd class="ml-5">{{this.questao.subdomain}}</dd>
+                  </dl>
+                </v-col>
+                 <v-col cols="4">
+                   <dl>
+                    <dt class="title">Subsubdomínio</dt>
+                    <dd class="ml-5">{{this.questao.subsubdomain}}</dd>
+                   </dl>
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col cols="4">
+                  <dl>
+                    <dt class="title">Ciclo de Estudos</dt>
+                    <dd class="ml-5">{{this.questao.study_cycle}}</dd>
+                  </dl>
+                </v-col>
+                 <v-col cols="4">
+                  <dl>
+                    <dt class="title">Escolaridade</dt>
+                    <dd class="ml-5">{{this.questao.scholarity}}</dd>
+                  </dl>
+                </v-col>
+                 <v-col cols="4">
+                   <dl>
+                    <dt class="title">Autor</dt>
+                    <dd class="ml-5">{{this.questao.author}}</dd>
+                   </dl>
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col cols="4">
+                  <dl>
+                    <dt class="title">Nível de Dificuldade</dt>
+                    <dd class="ml-5">{{this.questao.difficulty_level}}</dd>
+                  </dl>
+                </v-col>
+                 <v-col cols="4">
+                  <dl>
+                    <dt class="title">Tipo de Questão</dt>
+                    <dd class="ml-5">{{this.questao.type}}</dd>
+                  </dl>
+                </v-col>
+                 <v-col cols="4">
+                   <dl>
+                    <dt class="title">Tempo de Resposta</dt>
+                    <dd class="ml-5">{{this.questao.answering_time}}</dd>
+                   </dl>
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col cols="4">
+                  <dl>
+                    <dt class="title">Repetições</dt>
+                    <dd class="ml-5">{{this.questao.repetitions}}</dd>
+                  </dl>
+                </v-col>
+                 <v-col cols="4">
+                  <dl>
+                    <dt class="title">Modo de Visualização</dt>
+                    <dd class="ml-5">{{this.questao.display_mode}}</dd>
+                  </dl>
+                </v-col>
+                 <v-col cols="4">
+                   <dl>
+                    <dt class="title">Idioma</dt>
+                    <dd class="ml-5">{{this.questao.language}}</dd>
+                   </dl>
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col cols="4">
+                  <dl>
+                    <dt class="title">Explicação</dt>
+                    <dd class="ml-5">{{this.questao.explanation}}</dd>
+                  </dl>
+                </v-col>
+                 <v-col cols="4">
+                  <dl>
+                    <dt class="title">Fontes de Informação</dt>
+                    <dd class="ml-5">{{this.questao.source}}</dd>
+                  </dl>
+                </v-col>
+                 <v-col cols="4">
+                   <dl>
+                    <dt class="title">Notas</dt>
+                    <dd class="ml-5">{{this.questao.notes}}</dd>
+                   </dl>
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col cols="4">
+                  <dl>
+                    <dt class="title">Data de Criação</dt>
+                    <dd class="ml-5">{{this.questao.domain}}</dd>
+                  </dl>
+                </v-col>
+                 <v-col cols="4">
+                  <dl>
+                    <dt class="title">Inserido Por</dt>
+                    <dd class="ml-5">{{this.questao.subdomain}}</dd>
+                  </dl>
+                </v-col>
+                <v-col cols="4">
+                  <dl>
+                    <dt class="title">Estado</dt>
+                    <dd class="ml-5">{{this.questao.status}}</dd>
+                  </dl>
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col cols="6">
+                  <dl>
+                    <dt class="title">Data de Validação</dt>
+                    <dd class="ml-5">{{this.questao.validated_at}}</dd>
+                  </dl>
+                </v-col>
+                 <v-col cols="6">
+                  <dl>
+                    <dt class="title">Validado Por</dt>
+                    <dd class="ml-5">{{this.questao.validated_by}}</dd>
+                  </dl>
+                </v-col>
+              </v-row>
+            </v-container>
             <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" text @click="closeShow">Cancel</v-btn>
-              <v-spacer></v-spacer>
+              <v-container>
+                  <v-row >
+                    <v-col class="text-right">
+                      <v-btn color="#29E898" @click="closeShow" elevation="5" class="mt-5">
+                        <v-icon color="white">mdi-door-open</v-icon>
+                      </v-btn>
+                    </v-col>
+                  </v-row>
+              </v-container>
             </v-card-actions>
           </v-card>
        </v-dialog>
-      <v-dialog v-model="dialogDelete" max-width="500px">
+      <v-dialog v-model="dialogDelete" max-width="600px">
           <v-card>
-            <v-card-title class="headline">Are you sure you want to delete this item?</v-card-title>
+            <v-app-bar color="#2A3F54" >
+              <div class="d-flex align-center">
+                <h3 width="40" class="white--text"> REMOVER QUESTÃO - {{this.questao.id}} </h3>
+              </div>
+            </v-app-bar>
+            <v-container>
+              <v-row>
+                <v-col cols="3">
+                  <v-card class="ml-4 mt-1" color="white" flat height="100px" width="110px" >
+                      <v-img src="@/assets/delete.png"/>
+                  </v-card>
+                </v-col>
+                <v-col cols="9">
+                  <dl>
+                    <dt class="title">Pergunta</dt>
+                    <dd class="ml-5">{{this.questao.header}}</dd>
+                  </dl>
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col cols="6">
+                  <dl>
+                    <dt class="title">Domínio</dt>
+                    <dd class="ml-5">{{this.questao.domain}}</dd>
+                  </dl>
+                </v-col>
+                 <v-col cols="6">
+                  <dl>
+                    <dt class="title">Subdomínio</dt>
+                    <dd class="ml-5">{{this.questao.subdomain}}</dd>
+                  </dl>
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col cols="6">
+                  <dl>
+                    <dt class="title">Autor</dt>
+                    <dd class="ml-5">{{this.questao.author}}</dd>
+                  </dl>
+                </v-col>
+                 <v-col cols="6">
+                  <dl>
+                    <dt class="title">Data de Criação</dt>
+                    <dd class="ml-5">{{this.questao.inserted_at}}</dd>
+                  </dl>
+                </v-col>
+              </v-row>
+            </v-container>
             <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
-              <v-btn color="blue darken-1" text @click="deleteConfirm">OK</v-btn>
-              <v-spacer></v-spacer>
+              <v-container>
+                  <v-row >
+                    <v-col class="text-right">
+                      <v-btn color="red" @click="deleteConfirm" elevation="5" class="mt-5 mr-3">
+                        <v-icon color="white">mdi-trash-can-outline</v-icon>
+                      </v-btn>
+                      <v-btn color="#29E898" @click="closeDelete" elevation="5" class="mt-5">
+                        <v-icon color="white">mdi-door-open</v-icon>
+                      </v-btn>
+                    </v-col>
+                  </v-row>
+              </v-container>
             </v-card-actions>
           </v-card>
        </v-dialog>
@@ -74,13 +321,41 @@ export default {
             dialogShow: false,
             dialogDelete: false,
             headers: [
-                { text: "Identificador", sortable: false, value: "id", class: "white--text"},
-                { text: "Domínio",  sortable: false, value: "domain", class: "white--text" },
-                { text: "SubDomínio",  sortable: false, value: "subdomain", class: "white--text" },
-                { text: "Autor", sortable: false, value: "author", class: "white--text"},
-                { text: "Data Criação", sortable: false, value: "inserted_at", class: "white--text"},
+                { text: "Identificador", sortable: true, value: "id", class: "white--text"},
+                { text: "Domínio",  sortable: true, value: "domain", class: "white--text" },
+                { text: "SubDomínio",  sortable: true, value: "subdomain", class: "white--text" },
+                { text: "Autor", sortable: true, value: "author", class: "white--text"},
+                { text: "Data Criação", sortable: true, value: "inserted_at", class: "white--text"},
                 { text: "Opções", sortable: false, value: "actions", class: "white--text"},
             ],
+            questao:{
+              id: '',
+              language: '',
+              study_cycle: '',
+              scholarity: '',
+              domain: '',
+              subdomain: '',
+              subsubdomain: '',
+              difficulty_level: '',
+              author: '',
+              display_mode: '',
+              answering_time: '',
+              type: '',
+              precedence: [],
+              repetitions: '',
+              header:'',
+              body: [],
+              explanation: '',
+              images: '',
+              videos: '',
+              source: '',
+              notes: '',
+              status: '',
+              inserted_by: '',
+              inserted_at: '',
+              validated_by: '',
+              validated_at: ''
+            },
             search:'',
             navQuestoes: [],
         }
@@ -89,14 +364,22 @@ export default {
         axios.get(`http://localhost:8001/question`)
           .then((response)=>{
             this.navQuestoes=response.data
-            console.log(this.navQuestoes);
           },(error) =>{
               console.log(error);
           });
     },
     methods: {
-      showItem () {
+      showItem (item) {
+        this.itemIndex = this.navQuestoes.indexOf(item)
+        this.questao = Object.assign({}, item)
         this.dialogShow = true
+      },
+
+      sendItem(data){
+        this.$router.push({
+          name: "ProdQuestao", 
+          params: { data }
+        });
       },
 
       closeShow(){
@@ -105,6 +388,7 @@ export default {
 
       deleteItem(item){
         this.itemIndex = this.navQuestoes.indexOf(item)
+        this.questao = Object.assign({}, item)
         this.dialogDelete = true
       },     
 
@@ -124,7 +408,7 @@ export default {
 <style scoped>
     /* css para tornar a aparência mais similar ao template */
     .v-data-table /deep/ th{
-        background-color:#2A3F54;
+        background-color:#4b779e;
         ;
     }
     .v-data-table /deep/ tr{
@@ -135,6 +419,13 @@ export default {
         background-color: rgb(245, 245, 245);
     }
 
-    a { text-decoration: none; }
+    a { 
+      text-decoration: none; 
+    }
+
+    .title {
+      color: #2A3F54
+    }
+
 
 </style>
