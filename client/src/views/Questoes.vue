@@ -393,7 +393,13 @@ export default {
       },     
 
       deleteConfirm(){
-        this.navQuestoes.splice(this.itemIndex, 1)
+        axios.delete(`http://localhost:8001/question/`+this.questao.id)
+          .then((response)=>{
+            console.log(response.data)
+            this.navQuestoes.splice(this.itemIndex, 1)
+          },(error) =>{
+              console.log(error);
+          });
         this.closeDelete()
       },
 

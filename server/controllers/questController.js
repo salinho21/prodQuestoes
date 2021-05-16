@@ -11,7 +11,7 @@ module.exports.listar = () => {
 
 module.exports.consultar = id => {
     return Question
-        .findOne({_id: id})
+        .findOne({id: id})
         .exec()
 }
 
@@ -21,9 +21,9 @@ module.exports.inserir = q => {
 }
 
 module.exports.remover = function(id){
-    return Question.deleteOne({_id: id})
+    return Question.deleteOne({id: id})
 }
 
 module.exports.alterar = function(q){
-    return Question.findByIdAndUpdate({_id: q._id}, q, {new: true})
+    return Question.findByIdAndUpdate({id: q.id}, q, {new: true})
 }

@@ -9,13 +9,23 @@
 
       <v-row>
         <v-col cols="8">
-          <v-text-field class="mt-4" v-model="subdominio.designation" :rules="rules.required" :counter="200" label="Subdomínio"></v-text-field>
+          <div v-if="firstSub">
+            <v-text-field class="mt-4" v-model="subdominio.designation" :counter="200" label="Subdomínio"></v-text-field>
+          </div>
+          <div v-else>
+            <v-text-field class="mt-4" v-model="subdominio.designation" :rules="rules.required" :counter="200" label="Subdomínio"></v-text-field>
+          </div>
         </v-col>
       </v-row>
 
-      <v-row class="mt-5">
-        <v-col cols="12" md="12">
-          <v-textarea v-model="subdominio.description" label="Descrição" counter outlined auto-grow background-color="#f2f2fc" color="#2A3F54" rows="3" :rules="rules.required" placeholder="Introduza uma Descrição para o Subdomínio"></v-textarea>
+      <v-row>
+        <v-col cols="8">
+          <div v-if="firstSub">
+            <v-textarea v-model="subdominio.description" label="Descrição" counter outlined auto-grow background-color="#f2f2fc" color="#2A3F54" rows="3" placeholder="Introduza uma Descrição para o Subdomínio"></v-textarea>
+          </div>
+          <div v-else>
+            <v-textarea v-model="subdominio.description" label="Descrição" counter outlined auto-grow background-color="#f2f2fc" color="#2A3F54" rows="3" :rules="rules.required" placeholder="Introduza uma Descrição para o Subdomínio"></v-textarea>
+          </div>
         </v-col>
       </v-row>
 
@@ -100,6 +110,7 @@ export default {
             idDominio: '',
             description: '',
             editedIndex: -1,
+            firstSub: false,
             editing: false,
             dialogEdit: false,
             dialogDelete: false,
@@ -142,6 +153,7 @@ export default {
 
       reset(){
         this.$refs.form.reset()
+        this.formData.body.splice(0)
       },
 
       validate(){
@@ -151,6 +163,9 @@ export default {
       addSubdominio(){
         this.formData.body.push(this.subdominio);
         this.subdominio = Object.assign({}, this.defaultSub)
+        if(!this.firstSub){
+          this.firstSub = true
+        }
       },
 
       editItem(item){

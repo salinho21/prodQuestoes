@@ -32,7 +32,7 @@
                       <Subdominios ref="sm" @newdataRespostas="handleDataSubdominios($event)"/>
                    </v-tab-item>
                    <v-tab-item eager>
-                      <Avaliacao ref="av" @newdataSuporte="handleDataAvaliacao($event)"/>
+                      <Comportamento ref="cp" @newdataSuporte="handleDataAvaliacao($event)"/>
                    </v-tab-item>
                  </v-tabs-items>
               </v-card>
@@ -40,9 +40,8 @@
               <v-card class="mx-auto">
                 <v-row class="px-2 pb-2 ma-0 py-2" justify="space-between">
                   <v-btn-toggle v-model="formatting" multiple dense class="ml-5 mb-3">
-                    <v-btn @click="submit" color="#F0B62B" elevation="5" class="mr-2">
+                    <v-btn @click="confirmSubmit" color="#F0B62B" elevation="5" class="mr-2">
                       <v-icon color="white">mdi-checkbox-marked-outline</v-icon>
-                      
                     </v-btn>
 
                     <v-btn color="white" elevation="5" class="mr-2">
@@ -62,29 +61,114 @@
                     <v-btn to="/dominios" color="#29E898" elevation="5" class="">
                       <v-icon color="white">mdi-door-open</v-icon>
                     </v-btn>
-                    <v-dialog v-model="openHelp" max-width="500px">
-                      <v-card color="white">
-                        <v-card-title >
-                          <p>
-                            Gestão de Domínios
-                          </p>
-                        </v-card-title>
-                        <v-card-text>
-                          asdasdas
-                        </v-card-text>
-                        <v-card-actions>
-                          <v-btn @click="closeHelp" color="#2A3F54">
-                            <v-icon color="white">mdi-close</v-icon>
-                          </v-btn>  
-                        </v-card-actions>
-
-                      </v-card>
-                        
-                    </v-dialog>
                   </v-btn-toggle>
+                  <!-- Janela para Confirmação da Submissão -->
+                <v-dialog v-model="openSubmit" max-width="500px">
+                  <v-card>
+                    <v-app-bar color="#2A3F54" >
+                      <div class="d-flex align-center">
+                        <h3 width="40" class="white--text"> Confirmar Submissão</h3>
+                      </div>
+                    </v-app-bar>
+                    <v-container>
+                      <v-row>
+                        <v-col cols="3">
+                          <v-card class="ml-4 mt-1" color="white" flat height="100px" width="110px" >
+                              <v-img src="@/assets/questionmark.png"/>
+                          </v-card>
+                        </v-col>
+                        <v-col cols="9">
+                          <h3 class="ml-5 mt-5">Pretende confirmar a submissão da questão?</h3>
+                        </v-col>
+                      </v-row>
+                    </v-container>
+                    <v-card-actions>
+                      <v-container>
+                          <v-row >
+                            <v-col class="text-right">
+                              <v-btn color="#F0B62B" @click="submit" elevation="5" class="mt-5 mr-3">
+                                <v-icon color="white">mdi-checkbox-marked-outline</v-icon>
+                              </v-btn>
+                              <v-btn color="#29E898" @click="closeDelete" elevation="5" class="mt-5">
+                                <v-icon color="white">mdi-door-open</v-icon>
+                              </v-btn>
+                            </v-col>
+                          </v-row>
+                      </v-container>
+                    </v-card-actions>
+                  </v-card>
+                </v-dialog>
+                <!-- Janela de Erro na Submissão -->
+                <v-dialog v-model="openError" max-width="500px">
+                  <v-card>
+                    <v-app-bar color="#2A3F54" >
+                      <div class="d-flex align-center">
+                        <h3 width="40" class="white--text"> Erro na Submissão</h3>
+                      </div>
+                    </v-app-bar>
+                    <v-container>
+                      <v-row>
+                        <v-col cols="3">
+                          <v-card class="ml-4 mt-1" color="white" flat height="100px" width="110px" >
+                              <v-img src="@/assets/error.png"/>
+                          </v-card>
+                        </v-col>
+                        <v-col cols="9">
+                          <h3 class="ml-5 mt-5">Erro na submissão da questão!</h3>
+                          <h3 class="ml-5">Por favor preencha todos os campos obrigatórios.</h3>
+                        </v-col>
+                      </v-row>
+                    </v-container>
+                    <v-card-actions>
+                      <v-container>
+                          <v-row >
+                            <v-col class="text-right">
+                              <v-btn color="#29E898" @click="closeError" elevation="5" class="mt-5">
+                                <v-icon color="white">mdi-door-open</v-icon>
+                              </v-btn>
+                            </v-col>
+                          </v-row>
+                      </v-container>
+                    </v-card-actions>
+                  </v-card>
+                </v-dialog>
+                <!-- Janela de Diálogo para Ajuda -->
+                <v-dialog v-model="openHelp" max-width="500px">
+                <v-card>
+                  <v-app-bar color="#2A3F54" >
+                    <div class="d-flex align-center">
+                      <h3 width="40" class="white--text"> Ajuda</h3>
+                    </div>
+                  </v-app-bar>
+                  <v-container>
+                    <v-row>
+                      <v-col cols="3">
+                        <v-card class="ml-4 mt-1" color="white" flat height="100px" width="110px" >
+                            <v-img src="@/assets/information.png"/>
+                        </v-card>
+                      </v-col>
+                      <v-col cols="9">
+                        <h3 class="ml-5 mt-5">Preencha todos os campos que constituem o domínio.</h3>
+                        <h3 class="ml-5">Navegue por todas as tabs para garantir que toda a informação se encontra correta.</h3>
+                      </v-col>
+                    </v-row>
+                  </v-container>
+                  <v-card-actions>
+                    <v-container>
+                        <v-row >
+                          <v-col class="text-right">
+                            <v-btn color="#29E898" @click="closeHelp" elevation="5" class="mt-5">
+                              <v-icon color="white">mdi-door-open</v-icon>
+                            </v-btn>
+                          </v-col>
+                        </v-row>
+                    </v-container>
+                  </v-card-actions>
+                </v-card>
+              </v-dialog>
                 </v-row>
+                
               </v-card>
-
              </v-flex>
            </v-layout>    
            <Footer class="mt-5"></Footer> 
@@ -92,10 +176,10 @@
 </template>
 
 <script>
-//import axios from 'axios';
+import axios from 'axios';
 import Dominio from '@/components/Dominio';
 import Subdominios from '@/components/Subdominios';
-import Avaliacao from '@/components/Avaliacao';
+import Comportamento from '@/components/Comportamento';
 import AppHeader from '@/components/AppHeader'
 import NavDraw from '@/components/NavDraw'
 import Footer from '@/components/Footer'
@@ -104,7 +188,7 @@ export default {
   components: { 
         Dominio, 
         Subdominios,
-        Avaliacao,
+        Comportamento,
         AppHeader,
         NavDraw,
         Footer
@@ -113,6 +197,8 @@ export default {
     return{
       tab: null,
       openHelp: false,
+      openSubmit: false,
+      openError: false,
       items: [
         { tab: 'Caracterizacão'},
         { tab: 'Subdomínios'},
@@ -164,17 +250,21 @@ export default {
       [this.questao.explanation,this.questao.notes,this.questao.source,this.questao.status,this.questao.language] = e;
     },
 
-    submit(){
-      if(this.$refs.ct.validate() && this.$refs.rp.validate() && this.$refs.sp.validate()){
-        /*axios.post(`http://localhost:8001/question`, this.questao)
-          .then(function(response){
-            console.log(response)
-          });*/
-        console.log("Formulários Validados!")
+    confirmSubmit(){
+      if(this.$refs.dm.validate() && this.$refs.sm.validate() && this.$refs.cp.validate()){
+        this.openSubmit = true
       }
       else{
-        console.log('Nao é valido!')   
-      }  
+        this.openError = true   
+      }
+    },
+
+    submit(){
+        axios.post(`http://localhost:8001/question`, this.questao)
+          .then(function(response){
+            console.log(response)
+          });
+        this.openSubmit = false
     },
 
     reset() {
@@ -189,6 +279,10 @@ export default {
 
     closeHelp() {
       this.openHelp = false
+    },
+
+    closeError() {
+      this.openError = false
     }
   }
 }

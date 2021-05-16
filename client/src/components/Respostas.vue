@@ -9,7 +9,12 @@
       </v-card>
       <v-row>
         <v-col cols="8">
-          <v-text-field class="mt-4" v-model="resposta.answer" :rules="rules.required" :counter="200" label="Texto da Resposta"></v-text-field>
+          <div v-if="firstResposta">
+            <v-text-field class="mt-4" v-model="resposta.answer" :counter="200" label="Texto da Resposta"></v-text-field>
+          </div>
+          <div v-else>
+            <v-text-field class="mt-4" v-model="resposta.answer" :rules="rules.required" :counter="200" label="Texto da Resposta"></v-text-field>
+          </div>
         </v-col>
       </v-row>
 
@@ -171,6 +176,7 @@ export default {
             domain: '',
             header: '',
             editedIndex: -1,
+            firstResposta: false,
             editing: false,
             dialogEdit: false,
             dialogDelete: false,
@@ -216,9 +222,9 @@ export default {
             this.formData.body = data.body         
       }else{
         console.log("Nova questão")
-      }
-        
+      }    
     },
+
     mounted() {
       this.$root.$on('change', data => {
             this.idQuestao = data.sendId
@@ -229,8 +235,9 @@ export default {
 
     methods: {
 
-      reset () {
+      reset(){
         this.$refs.form.reset()
+        this.formData.body.splice(0)
       },
 
       validate() {
@@ -240,7 +247,11 @@ export default {
       addAnswer(){
         this.formData.body.push(this.resposta);
         this.resposta = Object.assign({}, this.defaultResp)
+        if(!this.firstResposta){
+          this.firstResposta = true
+        }
       },
+
        editItem (item) {
         this.editedIndex = this.formData.body.indexOf(item)
         this.resposta = Object.assign({}, item)
