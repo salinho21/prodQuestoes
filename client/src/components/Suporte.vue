@@ -127,8 +127,6 @@ export default ({
             this.formData.source = data.source
             this.formData.status = data.status
             this.formData.language = data.language   
-      }else{
-        console.log("Nova questão")
       }
     },
     mounted() {
@@ -154,8 +152,7 @@ export default ({
           },
             deep: true
         }
-      }  
-    
+      }     
 })
 </script>
 

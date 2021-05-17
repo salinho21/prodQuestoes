@@ -178,8 +178,6 @@
             this.formData.answering_time = data.answering_time
             this.formData.type = data.type
             this.formData.precedence = data.precedence            
-      }else{
-        console.log("Nova questão")
       }
     },
     methods: {

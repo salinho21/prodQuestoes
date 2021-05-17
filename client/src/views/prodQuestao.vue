@@ -42,10 +42,9 @@
                   <v-btn-toggle v-model="formatting" multiple dense class="ml-5 mb-3">
                     <v-btn @click="confirmSubmit" color="#F0B62B" elevation="5" class="mr-2">
                       <v-icon color="white">mdi-checkbox-marked-outline</v-icon>
-                      
                     </v-btn>
 
-                    <v-btn color="white" elevation="5" class="mr-2">
+                    <v-btn color="white" elevation="5" class="mr-2" @click="startImport">
                       <v-icon color="black">mdi-import</v-icon>
                     </v-btn>
 
@@ -65,109 +64,147 @@
                   </v-btn-toggle>
                 </v-row>
                 <!-- Janela para Confirmação da Submissão -->
-                    <v-dialog v-model="openSubmit" max-width="500px">
-                      <v-card>
-                        <v-app-bar color="#2A3F54" >
-                          <div class="d-flex align-center">
-                            <h3 width="40" class="white--text"> Confirmar Submissão</h3>
-                          </div>
-                        </v-app-bar>
-                        <v-container>
-                          <v-row>
-                            <v-col cols="3">
-                              <v-card class="ml-4 mt-1" color="white" flat height="100px" width="110px" >
-                                  <v-img src="@/assets/questionmark.png"/>
-                              </v-card>
-                            </v-col>
-                            <v-col cols="9">
-                              <h3 class="ml-5 mt-5">Pretende confirmar a submissão da questão?</h3>
-                            </v-col>
-                          </v-row>
-                        </v-container>
-                        <v-card-actions>
-                          <v-container>
-                              <v-row >
-                                <v-col class="text-right">
-                                  <v-btn color="#F0B62B" @click="submit" elevation="5" class="mt-5 mr-3">
-                                    <v-icon color="white">mdi-checkbox-marked-outline</v-icon>
-                                  </v-btn>
-                                  <v-btn color="#29E898" @click="closeDelete" elevation="5" class="mt-5">
-                                    <v-icon color="white">mdi-door-open</v-icon>
-                                  </v-btn>
-                                </v-col>
-                              </v-row>
-                          </v-container>
-                        </v-card-actions>
-                      </v-card>
-                    </v-dialog>
-                    <!-- Janela de Erro na Submissão -->
-                    <v-dialog v-model="openError" max-width="500px">
-                      <v-card>
-                        <v-app-bar color="#2A3F54" >
-                          <div class="d-flex align-center">
-                            <h3 width="40" class="white--text"> Erro na Submissão</h3>
-                          </div>
-                        </v-app-bar>
-                        <v-container>
-                          <v-row>
-                            <v-col cols="3">
-                              <v-card class="ml-4 mt-1" color="white" flat height="100px" width="110px" >
-                                  <v-img src="@/assets/error.png"/>
-                              </v-card>
-                            </v-col>
-                            <v-col cols="9">
-                              <h3 class="ml-5 mt-5">Erro na submissão da questão!</h3>
-                              <h3 class="ml-5">Por favor preencha todos os campos obrigatórios.</h3>
+                <v-dialog v-model="openSubmit" max-width="500px">
+                  <v-card>
+                    <v-app-bar color="#2A3F54" >
+                      <div class="d-flex align-center">
+                        <h3 width="40" class="white--text"> Confirmar Submissão</h3>
+                      </div>
+                    </v-app-bar>
+                    <v-container>
+                      <v-row>
+                        <v-col cols="3">
+                          <v-card class="ml-4 mt-1" color="white" flat height="100px" width="110px" >
+                              <v-img src="@/assets/questionmark.png"/>
+                          </v-card>
+                        </v-col>
+                        <v-col cols="9">
+                          <h3 class="ml-5 mt-5">Pretende confirmar a submissão da questão?</h3>
+                        </v-col>
+                      </v-row>
+                    </v-container>
+                    <v-card-actions>
+                      <v-container>
+                          <v-row >
+                            <v-col class="text-right">
+                              <v-btn color="#F0B62B" @click="submit" elevation="5" class="mt-5 mr-3">
+                                <v-icon color="white">mdi-checkbox-marked-outline</v-icon>
+                              </v-btn>
+                              <v-btn color="#29E898" @click="closeDelete" elevation="5" class="mt-5">
+                                <v-icon color="white">mdi-door-open</v-icon>
+                              </v-btn>
                             </v-col>
                           </v-row>
-                        </v-container>
-                        <v-card-actions>
-                          <v-container>
-                              <v-row >
-                                <v-col class="text-right">
-                                  <v-btn color="#29E898" @click="closeError" elevation="5" class="mt-5">
-                                    <v-icon color="white">mdi-door-open</v-icon>
-                                  </v-btn>
-                                </v-col>
-                              </v-row>
-                          </v-container>
-                        </v-card-actions>
-                      </v-card>
-                    </v-dialog>
-                    <!-- Janela de Diálogo para Ajuda -->
-                    <v-dialog v-model="openHelp" max-width="500px">
-                      <v-card>
-                        <v-app-bar color="#2A3F54" >
-                          <div class="d-flex align-center">
-                            <h3 width="40" class="white--text"> Ajuda</h3>
-                          </div>
-                        </v-app-bar>
-                        <v-container>
-                          <v-row>
-                            <v-col cols="3">
-                              <v-card class="ml-4 mt-1" color="white" flat height="100px" width="110px" >
-                                  <v-img src="@/assets/information.png"/>
-                              </v-card>
-                            </v-col>
-                            <v-col cols="9">
-                              <h3 class="ml-5 mt-5">Preencha todos os campos que constituem a questão.</h3>
-                              <h3 class="ml-5">Navegue por todas as tabs para garantir que toda a informação se encontra correta.</h3>
+                      </v-container>
+                    </v-card-actions>
+                  </v-card>
+                </v-dialog>
+                <!-- Janela de Erro na Submissão -->
+                <v-dialog v-model="openError" max-width="500px">
+                  <v-card>
+                    <v-app-bar color="#2A3F54" >
+                      <div class="d-flex align-center">
+                        <h3 width="40" class="white--text"> Erro na Submissão</h3>
+                      </div>
+                    </v-app-bar>
+                    <v-container>
+                      <v-row>
+                        <v-col cols="3">
+                          <v-card class="ml-4 mt-1" color="white" flat height="100px" width="110px" >
+                              <v-img src="@/assets/error.png"/>
+                          </v-card>
+                        </v-col>
+                        <v-col cols="9">
+                          <h3 class="ml-5 mt-5">Erro na submissão da questão!</h3>
+                          <h3 class="ml-5">Por favor preencha todos os campos obrigatórios.</h3>
+                        </v-col>
+                      </v-row>
+                    </v-container>
+                    <v-card-actions>
+                      <v-container>
+                          <v-row >
+                            <v-col class="text-right">
+                              <v-btn color="#29E898" @click="closeError" elevation="5" class="mt-5">
+                                <v-icon color="white">mdi-door-open</v-icon>
+                              </v-btn>
                             </v-col>
                           </v-row>
-                        </v-container>
-                        <v-card-actions>
-                          <v-container>
-                              <v-row >
-                                <v-col class="text-right">
-                                  <v-btn color="#29E898" @click="closeHelp" elevation="5" class="mt-5">
-                                    <v-icon color="white">mdi-door-open</v-icon>
-                                  </v-btn>
-                                </v-col>
-                              </v-row>
-                          </v-container>
-                        </v-card-actions>
-                      </v-card>
-                    </v-dialog>
+                      </v-container>
+                    </v-card-actions>
+                  </v-card>
+                </v-dialog>
+                <!-- Janela de Import -->
+                <v-dialog v-model="openImport" max-width="500px">
+                  <v-card>
+                    <v-app-bar color="#2A3F54" >
+                      <div class="d-flex align-center">
+                        <h3 width="40" class="white--text"> Import de Questão</h3>
+                      </div>
+                    </v-app-bar>
+                    <v-container>
+                      <v-row>
+                        <v-col cols="9">
+                          <h3 class="ml-5 mt-5">Insira o identificador da questão que pretende importar.</h3>
+                        </v-col>
+                      </v-row>
+                      <v-row>
+                        <v-col cols="9" class="ml-5">
+                          <v-text-field v-model="idImport" 
+                            :rules="required" 
+                            label="Identificador"/>
+                        </v-col>
+                      </v-row>
+                    </v-container>
+                    <v-card-actions>
+                      <v-container>
+                          <v-row >
+                            <v-col class="text-right">
+                              <v-btn color="#F0B62B" @click="confirmImport" elevation="5" class="mt-5 mr-3">
+                                <v-icon color="white">mdi-import</v-icon>
+                              </v-btn>
+                              <v-btn color="#29E898" @click="closeImport" elevation="5" class="mt-5">
+                                <v-icon color="white">mdi-door-open</v-icon>
+                              </v-btn>
+                            </v-col>
+                          </v-row>
+                      </v-container>
+                    </v-card-actions>
+                  </v-card>
+                </v-dialog>
+                <!-- Janela de Diálogo para Ajuda -->
+                <v-dialog v-model="openHelp" max-width="500px">
+                  <v-card>
+                    <v-app-bar color="#2A3F54" >
+                      <div class="d-flex align-center">
+                        <h3 width="40" class="white--text"> Ajuda</h3>
+                      </div>
+                    </v-app-bar>
+                    <v-container>
+                      <v-row>
+                        <v-col cols="3">
+                          <v-card class="ml-4 mt-1" color="white" flat height="100px" width="110px" >
+                              <v-img src="@/assets/information.png"/>
+                          </v-card>
+                        </v-col>
+                        <v-col cols="9">
+                          <h3 class="ml-5 mt-5">Preencha todos os campos que constituem a questão.</h3>
+                          <h3 class="ml-5">Navegue por todas as tabs para garantir que toda a informação se encontra correta.</h3>
+                        </v-col>
+                      </v-row>
+                    </v-container>
+                    <v-card-actions>
+                      <v-container>
+                          <v-row >
+                            <v-col class="text-right">
+                              <v-btn color="#29E898" @click="closeHelp" elevation="5" class="mt-5">
+                                <v-icon color="white">mdi-door-open</v-icon>
+                              </v-btn>
+                            </v-col>
+                          </v-row>
+                      </v-container>
+                    </v-card-actions>
+                  </v-card>
+                </v-dialog>
               </v-card>
 
              </v-flex>
@@ -198,8 +235,11 @@ export default {
     return{
       tab: null,
       openHelp: false,
+      openImport: false,
       openSubmit: false,
       openError: false,
+      idImport: '',
+      required: [(v) => !!v || "Field is required"],
       items: [
         { tab: 'Caracterizacão'},
         { tab: 'Respostas'},
@@ -235,11 +275,7 @@ export default {
       }
     }
   },
-  /*mounted(){
-    this.$root.$on('edit', data => { 
-      console.log(data.id)   
-    })
-  },*/
+ 
   methods:{
 
     handleDataCaracterizacao(e) {
@@ -266,21 +302,68 @@ export default {
     },
 
     submit(){
-      if(this.$refs.ct.validate() && this.$refs.rp.validate() && this.$refs.sp.validate()){
         axios.post(`http://localhost:8001/question`, this.questao)
           .then(function(response){
             console.log(response)
-          });
-      }
-      else{
-        console.log('Nao e valido!')   
-      }  
+          }); 
     },
 
     reset() {
       this.$refs.ct.reset()
       this.$refs.rp.reset()
       this.$refs.sp.reset()
+    },
+
+    closeError() {
+      this.openError = false
+    },
+
+    startImport() {
+      this.openImport = true
+    },
+
+    confirmImport(){
+      if(this.idImport!=''){
+        console.log(this.idImport)
+        axios.get(`http://localhost:8001/question/`+this.idImport)
+          .then((response)=>{
+            console.log(response.data.id)
+            this.questao.id = response.data.id,
+            this.questao.language = response.data.language, 
+            this.questao.study_cycle = response.data.study_cycle,
+            this.questao.scholarity = response.data.scholarity,
+            this.questao.domain = response.data.domain,
+            this.questao.subdomain = response.data.subdomain,
+            this.questao.subsubdomain = response.data.subsubdomain,
+            this.questao.difficulty_level = response.data.difficulty_level,
+            this.questao.author = response.data.author,
+            this.questao.display_mode = response.data.id, 
+            this.questao.answering_time = response.data.answering_time,
+            this.questao.type = response.data.type,
+            this.questao.precedence = response.data.precedence,
+            this.questao.repetitions = response.data.repetitions
+            this.questao.header = response.data.header,
+            this.questao.body = response.data.body,
+            this.questao.explanation = response.data.explanation,
+            this.questao.images = response.data.images,
+            this.questao.videos = response.data.videos,
+            this.questao.source = response.data.source,
+            this.questao.notes = response.data.notes,
+            this.questao.status = response.data.status
+            this.$router.go()
+          },(error) =>{
+              console.log(error);
+        });
+        
+        this.openImport = false
+      }else{
+        console.log(this.idImport)
+      }
+      
+    },
+
+    closeImport() {
+      this.openImport = false
     },
 
     help() {
@@ -291,9 +374,7 @@ export default {
       this.openHelp = false
     },
 
-    closeError() {
-      this.openError = false
-    }
+    
   }
 }
 </script>

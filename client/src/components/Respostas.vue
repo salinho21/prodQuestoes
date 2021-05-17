@@ -220,9 +220,7 @@ export default {
         console.log(this.$route.params.data)
         let data = this.$route.params.data
             this.formData.body = data.body         
-      }else{
-        console.log("Nova questão")
-      }    
+      }  
     },
 
     mounted() {
