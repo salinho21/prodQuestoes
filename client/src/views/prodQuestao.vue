@@ -400,8 +400,6 @@ export default {
         axios.post(`http://localhost:8001/question`, this.questao)
           .then(function(response){
             console.log(response)
-            
-            
           },(error) =>{
               console.log(error);
         }); 

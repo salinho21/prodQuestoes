@@ -1,8 +1,7 @@
 <template>
   <v-form v-model="valid" ref="form" >
     <v-container>
-      <v-row>
-        {{this.randomdata}}
+      <v-row> 
         <v-col cols="12" md="4">
           <v-text-field v-if="editing" v-model="formData.id" 
             :rules="[...rules.required,...rules.length30]" 
@@ -10,7 +9,7 @@
             :input="onChange()" readonly/>
             
             <v-text-field v-else v-model="formData.id" 
-            :rules="[...rules.required,...rules.length30]" 
+            :rules="[...rules.required,...rules.length30,...rules.repeatedID]" 
             :counter="30" label="Identificador" 
             :input="onChange()"/>
         </v-col>
@@ -127,7 +126,7 @@
 
 
 <script>
-//import axios from 'axios';
+import axios from 'axios';
 export default {
   data() {    
     return{
@@ -157,6 +156,7 @@ export default {
         },
       rules: {
           required: [(v) => !!v || "Field is required"],
+          repeatedID: [v => this.checkID(v) || "ID already exists"],
           length30: [v => (v && v.length <= 30) || "Field must be less or equal than 30 characters"],
           length75: [v => (v && v.length <= 75) || "Field must be less or equal than 75 characters"],
           length100: [v => (v && v.length <= 100) || "Field must be less or equal than 100 characters"],
@@ -169,14 +169,14 @@ export default {
   },
   created() {
 
-    /*axios.get(`http://localhost:8001/question`)
+    axios.get(`http://localhost:8001/question`)
       .then((response)=>{
         response.data.forEach((obj) =>{
-          this.idQuestoes = obj.id
+          this.idQuestoes.push(obj.id)
         });
       },(error) =>{
           console.log(error);
-    });*/
+    });
 
     if(this.$route.params.data!=null){
       this.editing = true
@@ -200,11 +200,7 @@ export default {
   methods: {
 
     checkID(item){
-      this.idQuestoes.forEach((value) =>{
-        if(value == item){
-          return false
-        }
-      }) 
+      return !this.idQuestoes.find(x => x === item)
     },
 
     reset () {

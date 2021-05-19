@@ -189,6 +189,41 @@
           </v-card>
         </v-dialog>
 
+        <!--Janela de Aviso na Inserção de Reposta -->
+        <v-dialog v-model="dialogResp" max-width="400px">
+          <v-card>
+            <v-app-bar color="#2A3F54" >
+              <div class="d-flex align-center">
+                <h3 width="40" class="white--text"> Aviso </h3>
+              </div>
+            </v-app-bar>
+            <v-container>
+              <v-row>
+                
+                <v-col cols="12">
+                  <h3 class="ml-5 mt-5">Para adicionar uma nova resposta, todos os campos têm que estar preenchidos!</h3>
+                </v-col>
+              </v-row>
+            </v-container>
+            <v-card-actions>
+              <v-container>
+                <v-row >
+                    <v-col class="text-right">
+                      <v-tooltip bottom>
+                        <template v-slot:activator="{ on, attrs }">
+                          <v-btn color="#29E898" @click="closeResp" v-bind="attrs" v-on="on" elevation="5">
+                            <v-icon color="white">mdi-door-open</v-icon>
+                          </v-btn>
+                        </template>
+                        <span>Sair</span>
+                      </v-tooltip>
+                    </v-col>
+                  </v-row>              
+              </v-container>
+            </v-card-actions>
+          </v-card>
+       </v-dialog>
+
         <!--Janela para Remoção de Resposta -->
         <v-dialog v-model="dialogDelete" max-width="500px">
           <v-card>
@@ -252,6 +287,7 @@ export default {
             firstResposta: false,
             editing: false,
             dialogEdit: false,
+            dialogResp: false,
             dialogDelete: false,
             pontos: ['1', '2', '3'],
             formData: {
@@ -313,15 +349,20 @@ export default {
       },
 
       validate() {
-        return this.$refs.form.validate()
+        return this.$refs.form.validate() && this.formData.body.length!=0
       },
 
       addAnswer(){
-        this.formData.body.push(this.resposta);
-        this.resposta = Object.assign({}, this.defaultResp)
-        if(!this.firstResposta){
-          this.firstResposta = true
+        if(this.resposta.answer != "" && this.resposta.points != ""){
+          this.formData.body.push(this.resposta);
+          this.resposta = Object.assign({}, this.defaultResp)
+          if(!this.firstResposta){
+            this.firstResposta = true
+          }
+        }else{
+          this.dialogResp = true
         }
+          
       },
 
        editItem (item) {
@@ -342,8 +383,15 @@ export default {
       },     
 
       deleteConfirm () {
-        this.formData.body.splice(this.editedIndex, 1)
-        this.closeDelete()
+        if(this.editedIndex == 0){
+          this.formData.body.splice(this.editedIndex, 1)
+          this.firstResposta = false
+          this.closeDelete()
+        }else{
+          this.formData.body.splice(this.editedIndex, 1)
+          this.closeDelete()
+        }
+          
       },
 
       close () {
@@ -356,6 +404,11 @@ export default {
         this.dialogEdit = false
         this.editedIndex = -1
       },
+
+      closeResp () {
+        this.dialogResp = false
+      },
+
 
       closeDelete () {
         this.dialogDelete = false
