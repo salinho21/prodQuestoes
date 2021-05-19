@@ -15,22 +15,48 @@
             <v-spacer></v-spacer>
 
             <v-text-field v-model="search" append-icon="mdi-magnify" label="Pesquisa" single-line hide-details class="mr-5"></v-text-field>
-            <v-btn to="/prodQuestao" color="#2A3F54" class="white--text mr-4">
-              <v-icon>mdi-text-box-plus-outline</v-icon>
-            </v-btn>
-            <v-btn  color="#2A3F54" class="white--text">
-              <v-icon>mdi-printer</v-icon>
-            </v-btn>
+            <v-tooltip bottom>
+                <template v-slot:activator="{ on, attrs }">    
+                  <v-btn v-bind="attrs" v-on="on" to="/prodQuestao" color="#2A3F54" class="white--text mr-4">
+                    <v-icon>mdi-text-box-plus-outline</v-icon>
+                  </v-btn>                    
+                </template>
+              <span>Criar Questão</span>
+            </v-tooltip>
+            <v-tooltip bottom>
+                <template v-slot:activator="{ on, attrs }">    
+                  <v-btn v-bind="attrs" v-on="on" color="#2A3F54" class="white--text">
+                    <v-icon>mdi-printer</v-icon>
+                  </v-btn>                    
+                </template>
+              <span>Imprimir</span>
+            </v-tooltip>
           </v-toolbar>
         </template>
         <template v-slot:[`item.actions`]="{ item }">
-          <v-icon small class="mr-2" @click="showItem(item)">mdi-eye</v-icon>
+          <v-tooltip bottom>
+            <template v-slot:activator="{ on, attrs }">
+              <v-icon v-bind="attrs" v-on="on" small class="mr-2" @click="showItem(item)">mdi-eye</v-icon>
+            </template>
+            <span>Ver</span>
+          </v-tooltip>
 
-          <v-icon small class="mr-2" @click="sendItem(item)">mdi-pencil</v-icon>
-
-          <v-icon small @click="deleteItem(item)">mdi-delete</v-icon>
+          <v-tooltip bottom>
+            <template v-slot:activator="{ on, attrs }">
+              <v-icon v-bind="attrs" v-on="on" small class="mr-2" @click="sendItem(item)">mdi-pencil</v-icon>
+            </template>
+            <span>Editar</span>
+          </v-tooltip>
+            
+          <v-tooltip bottom>
+            <template v-slot:activator="{ on, attrs }">
+              <v-icon v-bind="attrs" v-on="on" small @click="deleteItem(item)">mdi-delete</v-icon>
+            </template>
+            <span>Remover</span>
+          </v-tooltip>
         </template>
       </v-data-table>
+      <!-- Janela para Ver Questão -->
       <v-dialog v-model="dialogShow" max-width="900px">
           <v-card>
             <v-app-bar color="#2A3F54" >
@@ -216,15 +242,21 @@
               <v-container>
                   <v-row >
                     <v-col class="text-right">
-                      <v-btn color="#29E898" @click="closeShow" elevation="5" class="mt-5">
-                        <v-icon color="white">mdi-door-open</v-icon>
-                      </v-btn>
+                      <v-tooltip bottom>
+                        <template v-slot:activator="{ on, attrs }">    
+                          <v-btn v-bind="attrs" v-on="on" color="#29E898" @click="closeShow" elevation="5" class="mt-5">
+                            <v-icon color="white">mdi-door-open</v-icon>
+                          </v-btn>                    
+                        </template>
+                      <span>Sair</span>
+                    </v-tooltip>
                     </v-col>
                   </v-row>
               </v-container>
             </v-card-actions>
           </v-card>
        </v-dialog>
+       <!-- Janela para Remoção de Questão -->
       <v-dialog v-model="dialogDelete" max-width="600px">
           <v-card>
             <v-app-bar color="#2A3F54" >
@@ -279,12 +311,22 @@
               <v-container>
                   <v-row >
                     <v-col class="text-right">
-                      <v-btn color="red" @click="deleteConfirm" elevation="5" class="mt-5 mr-3">
-                        <v-icon color="white">mdi-trash-can-outline</v-icon>
-                      </v-btn>
-                      <v-btn color="#29E898" @click="closeDelete" elevation="5" class="mt-5">
-                        <v-icon color="white">mdi-door-open</v-icon>
-                      </v-btn>
+                      <v-tooltip bottom>
+                        <template v-slot:activator="{ on, attrs }">    
+                          <v-btn v-bind="attrs" v-on="on" color="red" @click="deleteConfirm" elevation="5" class="mt-5 mr-3">
+                            <v-icon color="white">mdi-trash-can-outline</v-icon>
+                          </v-btn>                    
+                        </template>
+                      <span>Confirmar Remoção</span>
+                      </v-tooltip>
+                      <v-tooltip bottom>
+                        <template v-slot:activator="{ on, attrs }">    
+                          <v-btn v-bind="attrs" v-on="on" color="#29E898" @click="closeDelete" elevation="5" class="mt-5">
+                            <v-icon color="white">mdi-door-open</v-icon>
+                          </v-btn>                    
+                        </template>
+                      <span>Sair</span>
+                    </v-tooltip>
                     </v-col>
                   </v-row>
               </v-container>
@@ -396,6 +438,7 @@ export default {
         axios.delete(`http://localhost:8001/question/`+this.questao.id)
           .then((response)=>{
             console.log(response.data)
+            console.log(this.itemIndex)
             this.navQuestoes.splice(this.itemIndex, 1)
           },(error) =>{
               console.log(error);
@@ -405,7 +448,6 @@ export default {
 
       closeDelete(){
         this.dialogDelete = false
-        this.itemIndex = -1
       }
     },
 

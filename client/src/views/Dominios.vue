@@ -24,11 +24,26 @@
           </v-toolbar>
         </template>
         <template v-slot:[`item.actions`]="{ item }">
-          <v-icon small class="mr-2" @click="showItem(item)">mdi-eye</v-icon>
+          <v-tooltip bottom>
+            <template v-slot:activator="{ on, attrs }">
+              <v-icon v-bind="attrs" v-on="on" small class="mr-2" @click="showItem(item)">mdi-eye</v-icon>
+            </template>
+            <span>Ver</span>
+          </v-tooltip>
 
-          <v-icon small class="mr-2" @click="sendItem(item)">mdi-pencil</v-icon>
-
-          <v-icon small @click="deleteItem(item)">mdi-delete</v-icon>
+          <v-tooltip bottom>
+            <template v-slot:activator="{ on, attrs }">
+              <v-icon v-bind="attrs" v-on="on" small class="mr-2" @click="sendItem(item)">mdi-pencil</v-icon>
+            </template>
+            <span>Editar</span>
+          </v-tooltip>
+            
+          <v-tooltip bottom>
+            <template v-slot:activator="{ on, attrs }">
+              <v-icon v-bind="attrs" v-on="on" small @click="deleteItem(item)">mdi-delete</v-icon>
+            </template>
+            <span>Remover</span>
+          </v-tooltip>
         </template>
       </v-data-table>
       <v-dialog v-model="dialogShow" max-width="900px">

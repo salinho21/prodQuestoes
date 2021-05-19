@@ -4,7 +4,12 @@
       <v-row>
         {{this.randomdata}}
         <v-col cols="12" md="4">
-          <v-text-field v-model="formData.id" 
+          <v-text-field v-if="editing" v-model="formData.id" 
+            :rules="[...rules.required,...rules.length30]" 
+            :counter="30" label="Identificador" 
+            :input="onChange()" readonly/>
+            
+            <v-text-field v-else v-model="formData.id" 
             :rules="[...rules.required,...rules.length30]" 
             :counter="30" label="Identificador" 
             :input="onChange()"/>
@@ -122,87 +127,108 @@
 
 
 <script>
-  export default {
-    data() {    
-      return{
-        randomdata: '',
-        sendObject:{
-          sendId:'',
-          sendDomain: '',
-          sendHeader: '',
-        },
-        valid: false,
-        formData:{
-            id: '',
-            study_cycle: '',
-            scholarity: '',
-            domain: '',
-            subdomain: '',
-            subsubdomain: '',
-            header: '',
-            difficulty_level: '',
-            author: '',
-            display_mode: '',
-            answering_time: '',
-            type: '',
-            precedence: [],
-            repetitions: ''
-          },
-        rules: {
-            required: [(v) => !!v || "Field is required"],
-            length30: [v => (v && v.length <= 30) || "Field must be less or equal than 30 characters"],
-            length75: [v => (v && v.length <= 75) || "Field must be less or equal than 75 characters"],
-            length100: [v => (v && v.length <= 100) || "Field must be less or equal than 100 characters"],
-        },
-        tempos: ['30', '45', '60'],
-        tipos: ['1', '2', '3'],
-        repeticoes: ['0','1', '2', '3']
-      }  
-    },
-    created() {
-      if(this.$route.params.data!=null){
-        console.log("Edição de questão")
-        console.log(this.$route.params.data)
-        let data = this.$route.params.data
-            this.formData.id = data.id
-            this.formData.study_cycle = data.study_cycle
-            this.formData.scholarity = data.scholarity
-            this.formData.domain = data.domain
-            this.formData.subdomain = data.subdomain
-            this.formData.subsubdomain = data.subsubdomain
-            this.formData.header = data.header
-            this.formData.difficulty_level = data.difficulty_level
-            this.formData.author = data.author
-            this.formData.display_mode = data.display_mode
-            this.formData.repetitions = data.repetitions
-            this.formData.answering_time = data.answering_time
-            this.formData.type = data.type
-            this.formData.precedence = data.precedence            
-      }
-    },
-    methods: {
-      reset () {
-        this.$refs.form.reset()
+//import axios from 'axios';
+export default {
+  data() {    
+    return{
+      editing: false,
+      randomdata: '',
+      sendObject:{
+        sendId:'',
+        sendDomain: '',
+        sendHeader: '',
       },
-      validate() {
-        return this.$refs.form.validate()
-      },
-      onChange(){
-        this.sendObject.sendId = this.formData.id
-        this.sendObject.sendDomain = this.formData.domain
-        this.sendObject.sendHeader = this.formData.header
-        this.$root.$emit('change',this.sendObject)
-      }
-    },
-    watch: {
-        formData: {
-            handler: function() {
-              this.$emit('newdataCaracterizacao', [this.formData.id,this.formData.study_cycle,this.formData.scholarity,this.formData.domain,
-              this.formData.subdomain,this.formData.subsubdomain,this.formData.header,this.formData.difficulty_level,this.formData.author,
-              this.formData.display_mode,this.formData.answering_time,this.formData.type,this.formData.precedence,this.formData.repetitions]);
-          },
-            deep: true
+      valid: false,
+      formData:{
+          id: '',
+          study_cycle: '',
+          scholarity: '',
+          domain: '',
+          subdomain: '',
+          subsubdomain: '',
+          header: '',
+          difficulty_level: '',
+          author: '',
+          display_mode: '',
+          answering_time: '',
+          type: '',
+          precedence: [],
+          repetitions: ''
         },
-      }   
-  }
+      rules: {
+          required: [(v) => !!v || "Field is required"],
+          length30: [v => (v && v.length <= 30) || "Field must be less or equal than 30 characters"],
+          length75: [v => (v && v.length <= 75) || "Field must be less or equal than 75 characters"],
+          length100: [v => (v && v.length <= 100) || "Field must be less or equal than 100 characters"],
+      },
+      tempos: ['30', '45', '60'],
+      tipos: ['1', '2', '3'],
+      repeticoes: ['0','1', '2', '3'],
+      idQuestoes: []
+    }  
+  },
+  created() {
+
+    /*axios.get(`http://localhost:8001/question`)
+      .then((response)=>{
+        response.data.forEach((obj) =>{
+          this.idQuestoes = obj.id
+        });
+      },(error) =>{
+          console.log(error);
+    });*/
+
+    if(this.$route.params.data!=null){
+      this.editing = true
+      let data = this.$route.params.data
+          this.formData.id = data.id
+          this.formData.study_cycle = data.study_cycle
+          this.formData.scholarity = data.scholarity
+          this.formData.domain = data.domain
+          this.formData.subdomain = data.subdomain
+          this.formData.subsubdomain = data.subsubdomain
+          this.formData.header = data.header
+          this.formData.difficulty_level = data.difficulty_level
+          this.formData.author = data.author
+          this.formData.display_mode = data.display_mode
+          this.formData.repetitions = data.repetitions
+          this.formData.answering_time = data.answering_time
+          this.formData.type = data.type
+          this.formData.precedence = data.precedence            
+    }
+  },
+  methods: {
+
+    checkID(item){
+      this.idQuestoes.forEach((value) =>{
+        if(value == item){
+          return false
+        }
+      }) 
+    },
+
+    reset () {
+      this.$refs.form.reset()
+    },
+    validate() {
+      return this.$refs.form.validate()
+    },
+    onChange(){
+      this.sendObject.sendId = this.formData.id
+      this.sendObject.sendDomain = this.formData.domain
+      this.sendObject.sendHeader = this.formData.header
+      this.$root.$emit('change',this.sendObject)
+    }
+  },
+  watch: {
+      formData: {
+          handler: function() {
+            this.$emit('newdataCaracterizacao', [this.formData.id,this.formData.study_cycle,this.formData.scholarity,this.formData.domain,
+            this.formData.subdomain,this.formData.subsubdomain,this.formData.header,this.formData.difficulty_level,this.formData.author,
+            this.formData.display_mode,this.formData.answering_time,this.formData.type,this.formData.precedence,this.formData.repetitions]);
+        },
+          deep: true
+      },
+    }   
+}
 </script>

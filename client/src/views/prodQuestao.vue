@@ -40,27 +40,53 @@
               <v-card class="mx-auto" >
                 <v-row class="px-2 pb-2 ma-0 py-2" justify="space-between">
                   <v-btn-toggle v-model="formatting" multiple dense class="ml-5 mb-3">
-                    <v-btn @click="confirmSubmit" color="#F0B62B" elevation="5" class="mr-2">
-                      <v-icon color="white">mdi-checkbox-marked-outline</v-icon>
-                    </v-btn>
+                    <v-tooltip bottom>
+                      <template v-slot:activator="{ on, attrs }">   
+                        <v-btn v-bind="attrs" v-on="on" @click="confirmSubmit" color="#F0B62B" elevation="5" class="mr-2">
+                          <v-icon color="white">mdi-checkbox-marked-outline</v-icon>
+                        </v-btn>                     
+                      </template>
+                      <span>Submit</span>
+                    </v-tooltip>
 
-                    <v-btn color="white" elevation="5" class="mr-2" @click="startImport">
-                      <v-icon color="black">mdi-import</v-icon>
-                    </v-btn>
+                    <v-tooltip bottom>
+                      <template v-slot:activator="{ on, attrs }">    
+                        <v-btn v-bind="attrs" v-on="on" color="white" elevation="5" class="mr-2" @click="startImport">
+                          <v-icon color="black">mdi-import</v-icon>
+                        </v-btn>                    
+                      </template>
+                      <span>Import</span>
+                    </v-tooltip>
 
-                    <v-btn color="#29E898" elevation="5" @click="reset">
-                      <v-icon color="white">mdi-broom</v-icon>
-                    </v-btn>
+                    <v-tooltip bottom>
+                      <template v-slot:activator="{ on, attrs }">    
+                        <v-btn v-bind="attrs" v-on="on" color="#29E898" elevation="5" @click="reset">
+                          <v-icon color="white">mdi-broom</v-icon>
+                        </v-btn>                    
+                      </template>
+                      <span>Reset</span>
+                    </v-tooltip>
                   </v-btn-toggle>
 
                   <v-btn-toggle v-model="alignment"
                     dense class="mr-5 mb-3">
-                    <v-btn color="#2A3F54" class="mr-2" elevation="5" @click="help">
-                      <v-icon color="white">mdi-help</v-icon>
-                    </v-btn>
-                    <v-btn to="/questoes" color="#29E898" elevation="5" class="">
-                      <v-icon color="white">mdi-door-open</v-icon>
-                    </v-btn>
+                    <v-tooltip bottom>
+                      <template v-slot:activator="{ on, attrs }">    
+                        <v-btn v-bind="attrs" v-on="on" color="#2A3F54" class="mr-2" elevation="5" @click="help">
+                          <v-icon color="white">mdi-help</v-icon>
+                        </v-btn>                    
+                      </template>
+                      <span>Help</span>
+                    </v-tooltip>
+
+                    <v-tooltip bottom>
+                      <template v-slot:activator="{ on, attrs }">    
+                         <v-btn v-bind="attrs" v-on="on" to="/questoes" color="#29E898" elevation="5" class="">
+                          <v-icon color="white">mdi-door-open</v-icon>
+                        </v-btn>                    
+                      </template>
+                      <span>Sair</span>
+                    </v-tooltip>
                   </v-btn-toggle>
                 </v-row>
                 <!-- Janela para Confirmação da Submissão -->
@@ -87,12 +113,61 @@
                       <v-container>
                           <v-row >
                             <v-col class="text-right">
-                              <v-btn color="#F0B62B" @click="submit" elevation="5" class="mt-5 mr-3">
-                                <v-icon color="white">mdi-checkbox-marked-outline</v-icon>
-                              </v-btn>
-                              <v-btn color="#29E898" @click="closeDelete" elevation="5" class="mt-5">
-                                <v-icon color="white">mdi-door-open</v-icon>
-                              </v-btn>
+                              <v-tooltip bottom>
+                                <template v-slot:activator="{ on, attrs }">   
+                                  <v-btn v-bind="attrs" v-on="on" color="#F0B62B" @click="submit" elevation="5" class="mt-5 mr-3">
+                                    <v-icon color="white">mdi-checkbox-marked-outline</v-icon>
+                                  </v-btn>                     
+                                </template>
+                                <span>Submit</span>
+                              </v-tooltip>
+
+                              <v-tooltip bottom>
+                                <template v-slot:activator="{ on, attrs }">   
+                                  <v-btn v-bind="attrs" v-on="on" color="#29E898" @click="closeSubmit" elevation="5" class="mt-5">
+                                    <v-icon color="white">mdi-door-open</v-icon>
+                                  </v-btn>                     
+                                </template>
+                                <span>Sair</span>
+                              </v-tooltip>
+                            </v-col>
+                          </v-row>
+                      </v-container>
+                    </v-card-actions>
+                  </v-card>
+                </v-dialog>
+                <!-- Janela de Submissão Bem-Sucedida -->
+                 <v-dialog v-model="openConfirmSubmit" max-width="500px">
+                  <v-card>
+                    <v-app-bar color="#2A3F54" >
+                      <div class="d-flex align-center">
+                        <h3 width="40" class="white--text"> Submissão de Questão</h3>
+                      </div>
+                    </v-app-bar>
+                    <v-container>
+                      <v-row>
+                        <v-col cols="3">
+                          <v-card class="ml-4 mt-1" color="white" flat height="100px" width="110px" >
+                              <v-img src="@/assets/check.png"/>
+                          </v-card>
+                        </v-col>
+                        <v-col cols="9">
+                          <h3 class="ml-5 mt-5">Submissão de Questão com Sucesso!</h3>
+                        </v-col>
+                      </v-row>
+                    </v-container>
+                    <v-card-actions>
+                      <v-container>
+                          <v-row >
+                            <v-col class="text-right">
+                              <v-tooltip bottom>
+                                <template v-slot:activator="{ on, attrs }">   
+                                  <v-btn v-bind="attrs" v-on="on" color="#29E898" @click="closeConfirmSubmit" elevation="5" class="mt-5">
+                                    <v-icon color="white">mdi-door-open</v-icon>
+                                  </v-btn>                     
+                                </template>
+                                <span>Sair</span>
+                              </v-tooltip>
                             </v-col>
                           </v-row>
                       </v-container>
@@ -124,9 +199,14 @@
                       <v-container>
                           <v-row >
                             <v-col class="text-right">
-                              <v-btn color="#29E898" @click="closeError" elevation="5" class="mt-5">
-                                <v-icon color="white">mdi-door-open</v-icon>
-                              </v-btn>
+                              <v-tooltip bottom>
+                                <template v-slot:activator="{ on, attrs }">   
+                                  <v-btn v-bind="attrs" v-on="on" color="#29E898" @click="closeError" elevation="5" class="mt-5">
+                                    <v-icon color="white">mdi-door-open</v-icon>
+                                  </v-btn>                     
+                                </template>
+                                <span>Sair</span>
+                              </v-tooltip>
                             </v-col>
                           </v-row>
                       </v-container>
@@ -159,12 +239,22 @@
                       <v-container>
                           <v-row >
                             <v-col class="text-right">
-                              <v-btn color="#F0B62B" @click="confirmImport" elevation="5" class="mt-5 mr-3">
-                                <v-icon color="white">mdi-import</v-icon>
-                              </v-btn>
-                              <v-btn color="#29E898" @click="closeImport" elevation="5" class="mt-5">
-                                <v-icon color="white">mdi-door-open</v-icon>
-                              </v-btn>
+                              <v-tooltip bottom>
+                                <template v-slot:activator="{ on, attrs }">   
+                                  <v-btn v-bind="attrs" v-on="on" color="#F0B62B" @click="confirmImport" elevation="5" class="mt-5 mr-3">
+                                    <v-icon color="white">mdi-import</v-icon>
+                                  </v-btn>                     
+                                </template>
+                                <span>Import</span>
+                              </v-tooltip>
+                              <v-tooltip bottom>
+                                <template v-slot:activator="{ on, attrs }">   
+                                  <v-btn v-bind="attrs" v-on="on" color="#29E898" @click="closeImport" elevation="5" class="mt-5">
+                                    <v-icon color="white">mdi-door-open</v-icon>
+                                  </v-btn>                     
+                                </template>
+                                <span>Sair</span>
+                              </v-tooltip>
                             </v-col>
                           </v-row>
                       </v-container>
@@ -196,9 +286,14 @@
                       <v-container>
                           <v-row >
                             <v-col class="text-right">
-                              <v-btn color="#29E898" @click="closeHelp" elevation="5" class="mt-5">
-                                <v-icon color="white">mdi-door-open</v-icon>
-                              </v-btn>
+                              <v-tooltip bottom>
+                                <template v-slot:activator="{ on, attrs }">   
+                                  <v-btn v-bind="attrs" v-on="on" color="#29E898" @click="closeHelp" elevation="5" class="mt-5">
+                                    <v-icon color="white">mdi-door-open</v-icon>
+                                  </v-btn>                     
+                                </template>
+                                <span>Sair</span>
+                              </v-tooltip>
                             </v-col>
                           </v-row>
                       </v-container>
@@ -206,7 +301,6 @@
                   </v-card>
                 </v-dialog>
               </v-card>
-
              </v-flex>
            </v-layout>   
            <Footer class="mt-5"></Footer>   
@@ -237,6 +331,7 @@ export default {
       openHelp: false,
       openImport: false,
       openSubmit: false,
+      openConfirmSubmit: false,
       openError: false,
       idImport: '',
       required: [(v) => !!v || "Field is required"],
@@ -272,7 +367,7 @@ export default {
         inserted_at:new Date().toLocaleString(), 
         validated_by:"", 
         validated_at:"" 
-      }
+      },
     }
   },
  
@@ -305,21 +400,21 @@ export default {
         axios.post(`http://localhost:8001/question`, this.questao)
           .then(function(response){
             console.log(response)
-          }); 
+            
+            
+          },(error) =>{
+              console.log(error);
+        }); 
+        this.openSubmit = false
+        this.openConfirmSubmit = true
+        this.reset()
+        
     },
 
     reset() {
       this.$refs.ct.reset()
       this.$refs.rp.reset()
       this.$refs.sp.reset()
-    },
-
-    closeError() {
-      this.openError = false
-    },
-
-    startImport() {
-      this.openImport = true
     },
 
     confirmImport(){
@@ -350,7 +445,6 @@ export default {
             this.questao.source = response.data.source,
             this.questao.notes = response.data.notes,
             this.questao.status = response.data.status
-            this.$router.go()
           },(error) =>{
               console.log(error);
         });
@@ -362,8 +456,24 @@ export default {
       
     },
 
+    startImport() {
+      this.openImport = true
+    },
+
+    closeSubmit() {
+      this.openSubmit = false
+    },
+
+    closeConfirmSubmit() {
+      this.openConfirmSubmit = false
+    },
+
     closeImport() {
       this.openImport = false
+    },
+
+    closeError() {
+      this.openError = false
     },
 
     help() {
@@ -373,8 +483,6 @@ export default {
     closeHelp() {
       this.openHelp = false
     },
-
-    
   }
 }
 </script>

@@ -55,27 +55,33 @@
           </template>
 
           <template v-slot:[`item.actions`]="{ item }">
-            <v-icon small class="mr-2" @click="editItem(item)">mdi-pencil</v-icon>
-            <v-icon small @click="deleteItem(item)">mdi-delete</v-icon>
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on, attrs }">
+                <v-icon v-bind="attrs" v-on="on" small class="mr-2" @click="editItem(item)">mdi-pencil</v-icon>
+              </template>
+              <span>Editar</span>
+            </v-tooltip>
+            
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on, attrs }">
+                <v-icon v-bind="attrs" v-on="on" small @click="deleteItem(item)">mdi-delete</v-icon>
+              </template>
+              <span>Remover</span>
+            </v-tooltip>
           </template>
         </v-data-table>
 
-        <v-dialog v-model="dialogDelete" max-width="500px">
-          <v-card>
-            <v-card-title class="headline">Are you sure you want to delete this item?</v-card-title>
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
-              <v-btn color="blue darken-1" text @click="deleteConfirm">OK</v-btn>
-              <v-spacer></v-spacer>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
 
-        <v-dialog v-model="dialogEdit" max-width="500px">
+
+        <!--Janela para Edição de Subdomínio -->
+        <v-dialog v-model="dialogEdit" max-width="700px">
           <v-card>
-            <v-card-title class="headline">Edit</v-card-title>
-            <v-card-text>
+            <v-app-bar color="#2A3F54" >
+              <div class="d-flex align-center">
+                <h3 width="40" class="white--text"> Editar Subdomínio</h3>
+              </div>
+            </v-app-bar>
+            <v-container>
               <v-row>
                 <v-col cols="8">
                   <v-text-field v-model="subdominio.designation" :rules="rules.required" :counter="200" label="Subdomínio"></v-text-field>
@@ -87,15 +93,80 @@
                   <v-textarea v-model="subdominio.description" label="Descrição" counter outlined auto-grow background-color="#f2f2fc" color="#2A3F54" rows="3" :rules="rules.required" placeholder="Introduza uma Descrição para o Subdomínio"></v-textarea>
                 </v-col>
               </v-row>
-            </v-card-text>
+            </v-container>
             <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" text @click="closeEdit">Cancel</v-btn>
-              <v-btn color="blue darken-1" text @click="editConfirm">OK</v-btn>
-              <v-spacer></v-spacer>
+              <v-container>
+                  <v-row >
+                    <v-col class="text-right">
+                      <v-tooltip bottom>
+                        <template v-slot:activator="{ on, attrs }">
+                          <v-btn color="#F0B62B" @click="editConfirm" v-bind="attrs" v-on="on" elevation="5" class=" mr-3">
+                            <v-icon color="white">mdi-checkbox-marked-outline</v-icon>
+                          </v-btn>
+                        </template>
+                        <span>Confirmar Edição</span>
+                      </v-tooltip>
+                      <v-tooltip bottom>
+                        <template v-slot:activator="{ on, attrs }">
+                          <v-btn color="#29E898" @click="closeEdit" v-bind="attrs" v-on="on" elevation="5">
+                            <v-icon color="white">mdi-door-open</v-icon>
+                          </v-btn>
+                        </template>
+                        <span>Sair</span>
+                      </v-tooltip>
+                    </v-col>
+                  </v-row>
+              </v-container>
             </v-card-actions>
           </v-card>
         </v-dialog>
+
+        <!--Janela para Remoção de Subdomínio -->
+        <v-dialog v-model="dialogDelete" max-width="500px">
+          <v-card>
+            <v-app-bar color="#2A3F54" >
+              <div class="d-flex align-center">
+                <h3 width="40" class="white--text"> Remover Subdomínio </h3>
+              </div>
+            </v-app-bar>
+            <v-container>
+              <v-row>
+                <v-col cols="3">
+                  <v-card class="ml-4 mt-1" color="white" flat height="100px" width="110px" >
+                      <v-img src="@/assets/delete.png"/>
+                  </v-card>
+                </v-col>
+                <v-col cols="9">
+                  <h3 class="ml-5 mt-5">Tem a certeza que pretende remover o Subdomínio?</h3>
+                </v-col>
+              </v-row>
+            </v-container>
+            <v-card-actions>
+              <v-container>
+                <v-row >
+                    <v-col class="text-right">
+                      <v-tooltip bottom>
+                        <template v-slot:activator="{ on, attrs }">
+                          <v-btn color="#F0B62B" @click="deleteConfirm" v-bind="attrs" v-on="on" elevation="5" class=" mr-3">
+                            <v-icon color="white">mdi-checkbox-marked-outline</v-icon>
+                          </v-btn>
+                        </template>
+                        <span>Confirmar Remoção</span>
+                      </v-tooltip>
+                      <v-tooltip bottom>
+                        <template v-slot:activator="{ on, attrs }">
+                          <v-btn color="#29E898" @click="closeDelete" v-bind="attrs" v-on="on" elevation="5">
+                            <v-icon color="white">mdi-door-open</v-icon>
+                          </v-btn>
+                        </template>
+                        <span>Sair</span>
+                      </v-tooltip>
+                    </v-col>
+                  </v-row>              
+              </v-container>
+            </v-card-actions>
+          </v-card>
+       </v-dialog>
 
       </v-card>
     </v-form>
@@ -117,15 +188,13 @@ export default {
             formData: {
                 body: [],
             },
-
             subdominio: {
                 designation: "",
-                description: "",
+                description: ""
             },
-            
             defaultSub: {
                 designation: "",
-                description: "",
+                description: ""
             },
             
             rules: {
