@@ -276,7 +276,7 @@
 </template>
 
 <script>
-
+import axios from 'axios';
 export default {
     data() {
         return {
@@ -339,6 +339,14 @@ export default {
             this.domain = data.sendDomain
             this.header = data.sendHeader
       })
+      this.$root.$on('import', data => {
+            axios.get(`http://localhost:8001/question/`+ data)
+              .then((response)=>{
+                this.formData.body = response.data.body
+              },(error) =>{
+                  console.log(error);
+              });
+      })
     },
 
     methods: {
@@ -362,7 +370,6 @@ export default {
         }else{
           this.dialogResp = true
         }
-          
       },
 
        editItem (item) {
@@ -391,26 +398,18 @@ export default {
           this.formData.body.splice(this.editedIndex, 1)
           this.closeDelete()
         }
-          
       },
 
-      close () {
-        this.dialog = false
-        this.resposta = Object.assign({}, this.defaultResp)
-        this.editedIndex = -1
-      },
-
-      closeEdit () {
+      closeEdit(){
         this.dialogEdit = false
         this.editedIndex = -1
       },
 
-      closeResp () {
+      closeResp(){
         this.dialogResp = false
       },
 
-
-      closeDelete () {
+      closeDelete(){
         this.dialogDelete = false
         this.editedIndex = -1
       },

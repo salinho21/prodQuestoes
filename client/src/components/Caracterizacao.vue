@@ -168,7 +168,6 @@ export default {
     }  
   },
   created() {
-
     axios.get(`http://localhost:8001/question`)
       .then((response)=>{
         response.data.forEach((obj) =>{
@@ -197,6 +196,32 @@ export default {
           this.formData.precedence = data.precedence            
     }
   },
+
+  mounted(){
+    this.$root.$on('import', data => {
+            axios.get(`http://localhost:8001/question/`+ data)
+              .then((response)=>{
+                this.formData.id = response.data.id,
+                this.formData.study_cycle = response.data.study_cycle,
+                this.formData.scholarity = response.data.scholarity,
+                this.formData.domain = response.data.domain,
+                this.formData.subdomain = response.data.subdomain,
+                this.formData.subsubdomain = response.data.subsubdomain,
+                this.formData.difficulty_level = response.data.difficulty_level,
+                this.formData.author = response.data.author,
+                this.formData.display_mode = response.data.display_mode, 
+                this.formData.answering_time = response.data.answering_time,
+                this.formData.type = response.data.type,
+                this.formData.precedence = response.data.precedence,
+                this.formData.repetitions = response.data.repetitions
+                this.formData.header = response.data.header
+                this.editing = true
+              },(error) =>{
+                  console.log(error);
+              });
+    })
+  },
+
   methods: {
 
     checkID(item){
@@ -206,15 +231,17 @@ export default {
     reset () {
       this.$refs.form.reset()
     },
+
     validate() {
       return this.$refs.form.validate()
     },
+    
     onChange(){
       this.sendObject.sendId = this.formData.id
       this.sendObject.sendDomain = this.formData.domain
       this.sendObject.sendHeader = this.formData.header
       this.$root.$emit('change',this.sendObject)
-    }
+    },
   },
   watch: {
       formData: {

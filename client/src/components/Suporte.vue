@@ -96,7 +96,7 @@
 </template>
 
 <script>
-
+import axios from 'axios';
 export default ({
     data(){
         return{
@@ -134,6 +134,18 @@ export default ({
             this.idQuestao = data.sendId
             this.domain = data.sendDomain
             this.header = data.sendHeader
+      })
+      this.$root.$on('import', data => {
+            axios.get(`http://localhost:8001/question/`+ data)
+              .then((response)=>{
+                this.formData.explanation = response.data.explanation
+                this.formData.notes = response.data.notes
+                this.formData.source = response.data.source
+                this.formData.status = response.data.status
+                this.formData.language = response.data.language
+              },(error) =>{
+                  console.log(error);
+              });
       })
     },
     methods: {

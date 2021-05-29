@@ -406,7 +406,6 @@ export default {
         this.openSubmit = false
         this.openConfirmSubmit = true
         this.reset()
-        
     },
 
     reset() {
@@ -416,6 +415,7 @@ export default {
     },
 
     confirmImport(){
+      /*console.log(this.idImport)
       if(this.idImport!=''){
         console.log(this.idImport)
         axios.get(`http://localhost:8001/question/`+this.idImport)
@@ -443,19 +443,24 @@ export default {
             this.questao.source = response.data.source,
             this.questao.notes = response.data.notes,
             this.questao.status = response.data.status
+            console.log(response.data)
           },(error) =>{
               console.log(error);
         });
-        
         this.openImport = false
       }else{
-        console.log(this.idImport)
-      }
-      
+        console.log('Erro')
+      }*/
+      this.$root.$emit('import', this.idImport)
+      console.log(this.idImport)
     },
 
     startImport() {
       this.openImport = true
+    },
+
+    closeImport() {
+      this.openImport = false
     },
 
     closeSubmit() {
@@ -466,20 +471,16 @@ export default {
       this.openConfirmSubmit = false
     },
 
-    closeImport() {
-      this.openImport = false
-    },
-
-    closeError() {
-      this.openError = false
-    },
-
     help() {
       this.openHelp = true
     },
 
     closeHelp() {
       this.openHelp = false
+    },
+
+    closeError() {
+      this.openError = false
     },
   }
 }

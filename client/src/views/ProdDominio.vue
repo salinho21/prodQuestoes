@@ -1,6 +1,6 @@
 <template>   
      <v-container class="my-5">
-        <AppHeader></AppHeader>
+       <AppHeader></AppHeader>
         <div>
             <NavDraw></NavDraw>
         </div>
@@ -32,37 +32,64 @@
                       <Subdominios ref="sm" @newdataRespostas="handleDataSubdominios($event)"/>
                    </v-tab-item>
                    <v-tab-item eager>
-                      <Comportamento ref="cp" @newdataSuporte="handleDataAvaliacao($event)"/>
+                      <Comportamento ref="cp" @newdataSuporte="handleDataComportamento($event)"/>
                    </v-tab-item>
                  </v-tabs-items>
               </v-card>
               
-              <v-card class="mx-auto">
+              <v-card class="mx-auto" >
                 <v-row class="px-2 pb-2 ma-0 py-2" justify="space-between">
                   <v-btn-toggle v-model="formatting" multiple dense class="ml-5 mb-3">
-                    <v-btn @click="confirmSubmit" color="#F0B62B" elevation="5" class="mr-2">
-                      <v-icon color="white">mdi-checkbox-marked-outline</v-icon>
-                    </v-btn>
+                    <v-tooltip bottom>
+                      <template v-slot:activator="{ on, attrs }">   
+                        <v-btn v-bind="attrs" v-on="on" @click="confirmSubmit" color="#F0B62B" elevation="5" class="mr-2">
+                          <v-icon color="white">mdi-checkbox-marked-outline</v-icon>
+                        </v-btn>                     
+                      </template>
+                      <span>Submit</span>
+                    </v-tooltip>
 
-                    <v-btn color="white" elevation="5" class="mr-2">
-                      <v-icon color="black">mdi-import</v-icon>
-                    </v-btn>
+                    <v-tooltip bottom>
+                      <template v-slot:activator="{ on, attrs }">    
+                        <v-btn v-bind="attrs" v-on="on" color="white" elevation="5" class="mr-2" @click="startImport">
+                          <v-icon color="black">mdi-import</v-icon>
+                        </v-btn>                    
+                      </template>
+                      <span>Import</span>
+                    </v-tooltip>
 
-                    <v-btn color="#29E898" elevation="5" @click="reset">
-                      <v-icon color="white">mdi-broom</v-icon>
-                    </v-btn>
+                    <v-tooltip bottom>
+                      <template v-slot:activator="{ on, attrs }">    
+                        <v-btn v-bind="attrs" v-on="on" color="#29E898" elevation="5" @click="reset">
+                          <v-icon color="white">mdi-broom</v-icon>
+                        </v-btn>                    
+                      </template>
+                      <span>Reset</span>
+                    </v-tooltip>
                   </v-btn-toggle>
 
-                  <v-btn-toggle v-model="alignment" dense class="mr-5 mb-3">
-                    <v-btn color="#2A3F54" class="mr-2" elevation="5">
-                      <v-icon color="white" @click="help">mdi-help</v-icon>
-                    </v-btn>
+                  <v-btn-toggle v-model="alignment"
+                    dense class="mr-5 mb-3">
+                    <v-tooltip bottom>
+                      <template v-slot:activator="{ on, attrs }">    
+                        <v-btn v-bind="attrs" v-on="on" color="#2A3F54" class="mr-2" elevation="5" @click="help">
+                          <v-icon color="white">mdi-help</v-icon>
+                        </v-btn>                    
+                      </template>
+                      <span>Help</span>
+                    </v-tooltip>
 
-                    <v-btn to="/dominios" color="#29E898" elevation="5" class="">
-                      <v-icon color="white">mdi-door-open</v-icon>
-                    </v-btn>
+                    <v-tooltip bottom>
+                      <template v-slot:activator="{ on, attrs }">    
+                         <v-btn v-bind="attrs" v-on="on" to="/dominios" color="#29E898" elevation="5" class="">
+                          <v-icon color="white">mdi-door-open</v-icon>
+                        </v-btn>                    
+                      </template>
+                      <span>Sair</span>
+                    </v-tooltip>
                   </v-btn-toggle>
-                  <!-- Janela para Confirmação da Submissão -->
+                </v-row>
+                <!-- Janela para Confirmação da Submissão -->
                 <v-dialog v-model="openSubmit" max-width="500px">
                   <v-card>
                     <v-app-bar color="#2A3F54" >
@@ -78,7 +105,7 @@
                           </v-card>
                         </v-col>
                         <v-col cols="9">
-                          <h3 class="ml-5 mt-5">Pretende confirmar a submissão da questão?</h3>
+                          <h3 class="ml-5 mt-5">Pretende confirmar a submissão do domínio?</h3>
                         </v-col>
                       </v-row>
                     </v-container>
@@ -86,12 +113,61 @@
                       <v-container>
                           <v-row >
                             <v-col class="text-right">
-                              <v-btn color="#F0B62B" @click="submit" elevation="5" class="mt-5 mr-3">
-                                <v-icon color="white">mdi-checkbox-marked-outline</v-icon>
-                              </v-btn>
-                              <v-btn color="#29E898" @click="closeDelete" elevation="5" class="mt-5">
-                                <v-icon color="white">mdi-door-open</v-icon>
-                              </v-btn>
+                              <v-tooltip bottom>
+                                <template v-slot:activator="{ on, attrs }">   
+                                  <v-btn v-bind="attrs" v-on="on" color="#F0B62B" @click="submit" elevation="5" class="mt-5 mr-3">
+                                    <v-icon color="white">mdi-checkbox-marked-outline</v-icon>
+                                  </v-btn>                     
+                                </template>
+                                <span>Submit</span>
+                              </v-tooltip>
+
+                              <v-tooltip bottom>
+                                <template v-slot:activator="{ on, attrs }">   
+                                  <v-btn v-bind="attrs" v-on="on" color="#29E898" @click="closeSubmit" elevation="5" class="mt-5">
+                                    <v-icon color="white">mdi-door-open</v-icon>
+                                  </v-btn>                     
+                                </template>
+                                <span>Sair</span>
+                              </v-tooltip>
+                            </v-col>
+                          </v-row>
+                      </v-container>
+                    </v-card-actions>
+                  </v-card>
+                </v-dialog>
+                <!-- Janela de Submissão Bem-Sucedida -->
+                 <v-dialog v-model="openConfirmSubmit" max-width="500px">
+                  <v-card>
+                    <v-app-bar color="#2A3F54" >
+                      <div class="d-flex align-center">
+                        <h3 width="40" class="white--text"> Submissão de Domínio</h3>
+                      </div>
+                    </v-app-bar>
+                    <v-container>
+                      <v-row>
+                        <v-col cols="3">
+                          <v-card class="ml-4 mt-1" color="white" flat height="100px" width="110px" >
+                              <v-img src="@/assets/check.png"/>
+                          </v-card>
+                        </v-col>
+                        <v-col cols="9">
+                          <h3 class="ml-5 mt-5">Submissão de Domínio com Sucesso!</h3>
+                        </v-col>
+                      </v-row>
+                    </v-container>
+                    <v-card-actions>
+                      <v-container>
+                          <v-row >
+                            <v-col class="text-right">
+                              <v-tooltip bottom>
+                                <template v-slot:activator="{ on, attrs }">   
+                                  <v-btn v-bind="attrs" v-on="on" color="#29E898" @click="closeConfirmSubmit" elevation="5" class="mt-5">
+                                    <v-icon color="white">mdi-door-open</v-icon>
+                                  </v-btn>                     
+                                </template>
+                                <span>Sair</span>
+                              </v-tooltip>
                             </v-col>
                           </v-row>
                       </v-container>
@@ -114,7 +190,7 @@
                           </v-card>
                         </v-col>
                         <v-col cols="9">
-                          <h3 class="ml-5 mt-5">Erro na submissão da questão!</h3>
+                          <h3 class="ml-5 mt-5">Erro na submissão do domínio!</h3>
                           <h3 class="ml-5">Por favor preencha todos os campos obrigatórios.</h3>
                         </v-col>
                       </v-row>
@@ -123,9 +199,62 @@
                       <v-container>
                           <v-row >
                             <v-col class="text-right">
-                              <v-btn color="#29E898" @click="closeError" elevation="5" class="mt-5">
-                                <v-icon color="white">mdi-door-open</v-icon>
-                              </v-btn>
+                              <v-tooltip bottom>
+                                <template v-slot:activator="{ on, attrs }">   
+                                  <v-btn v-bind="attrs" v-on="on" color="#29E898" @click="closeError" elevation="5" class="mt-5">
+                                    <v-icon color="white">mdi-door-open</v-icon>
+                                  </v-btn>                     
+                                </template>
+                                <span>Sair</span>
+                              </v-tooltip>
+                            </v-col>
+                          </v-row>
+                      </v-container>
+                    </v-card-actions>
+                  </v-card>
+                </v-dialog>
+                <!-- Janela de Import -->
+                <v-dialog v-model="openImport" max-width="500px">
+                  <v-card>
+                    <v-app-bar color="#2A3F54" >
+                      <div class="d-flex align-center">
+                        <h3 width="40" class="white--text"> Import de Domínio</h3>
+                      </div>
+                    </v-app-bar>
+                    <v-container>
+                      <v-row>
+                        <v-col cols="9">
+                          <h3 class="ml-5 mt-5">Insira o identificador do domínio que pretende importar.</h3>
+                        </v-col>
+                      </v-row>
+                      <v-row>
+                        <v-col cols="9" class="ml-5">
+                          <v-text-field v-model="idImport" 
+                            :rules="required" 
+                            label="Identificador"/>
+                        </v-col>
+                      </v-row>
+                    </v-container>
+                    <v-card-actions>
+                      <v-container>
+                          <v-row >
+                            <v-col class="text-right">
+                              <v-tooltip bottom>
+                                <template v-slot:activator="{ on, attrs }">   
+                                  <v-btn v-bind="attrs" v-on="on" color="#F0B62B" @click="confirmImport" elevation="5" class="mt-5 mr-3">
+                                    <v-icon color="white">mdi-import</v-icon>
+                                  </v-btn>                     
+                                </template>
+                                <span>Import</span>
+                              </v-tooltip>
+                              <v-tooltip bottom>
+                                <template v-slot:activator="{ on, attrs }">   
+                                  <v-btn v-bind="attrs" v-on="on" color="#29E898" @click="closeImport" elevation="5" class="mt-5">
+                                    <v-icon color="white">mdi-door-open</v-icon>
+                                  </v-btn>                     
+                                </template>
+                                <span>Sair</span>
+                              </v-tooltip>
                             </v-col>
                           </v-row>
                       </v-container>
@@ -134,44 +263,47 @@
                 </v-dialog>
                 <!-- Janela de Diálogo para Ajuda -->
                 <v-dialog v-model="openHelp" max-width="500px">
-                <v-card>
-                  <v-app-bar color="#2A3F54" >
-                    <div class="d-flex align-center">
-                      <h3 width="40" class="white--text"> Ajuda</h3>
-                    </div>
-                  </v-app-bar>
-                  <v-container>
-                    <v-row>
-                      <v-col cols="3">
-                        <v-card class="ml-4 mt-1" color="white" flat height="100px" width="110px" >
-                            <v-img src="@/assets/information.png"/>
-                        </v-card>
-                      </v-col>
-                      <v-col cols="9">
-                        <h3 class="ml-5 mt-5">Preencha todos os campos que constituem o domínio.</h3>
-                        <h3 class="ml-5">Navegue por todas as tabs para garantir que toda a informação se encontra correta.</h3>
-                      </v-col>
-                    </v-row>
-                  </v-container>
-                  <v-card-actions>
+                  <v-card>
+                    <v-app-bar color="#2A3F54" >
+                      <div class="d-flex align-center">
+                        <h3 width="40" class="white--text"> Ajuda</h3>
+                      </div>
+                    </v-app-bar>
                     <v-container>
-                        <v-row >
-                          <v-col class="text-right">
-                            <v-btn color="#29E898" @click="closeHelp" elevation="5" class="mt-5">
-                              <v-icon color="white">mdi-door-open</v-icon>
-                            </v-btn>
-                          </v-col>
-                        </v-row>
+                      <v-row>
+                        <v-col cols="3">
+                          <v-card class="ml-4 mt-1" color="white" flat height="100px" width="110px" >
+                              <v-img src="@/assets/information.png"/>
+                          </v-card>
+                        </v-col>
+                        <v-col cols="9">
+                          <h3 class="ml-5 mt-5">Preencha todos os campos que constituem o domínio.</h3>
+                          <h3 class="ml-5">Navegue por todas as tabs para garantir que toda a informação se encontra correta.</h3>
+                        </v-col>
+                      </v-row>
                     </v-container>
-                  </v-card-actions>
-                </v-card>
-              </v-dialog>
-                </v-row>
-                
+                    <v-card-actions>
+                      <v-container>
+                          <v-row >
+                            <v-col class="text-right">
+                              <v-tooltip bottom>
+                                <template v-slot:activator="{ on, attrs }">   
+                                  <v-btn v-bind="attrs" v-on="on" color="#29E898" @click="closeHelp" elevation="5" class="mt-5">
+                                    <v-icon color="white">mdi-door-open</v-icon>
+                                  </v-btn>                     
+                                </template>
+                                <span>Sair</span>
+                              </v-tooltip>
+                            </v-col>
+                          </v-row>
+                      </v-container>
+                    </v-card-actions>
+                  </v-card>
+                </v-dialog>
               </v-card>
              </v-flex>
-           </v-layout>    
-           <Footer class="mt-5"></Footer> 
+           </v-layout>   
+           <Footer class="mt-5"></Footer>   
      </v-container>
 </template>
 
@@ -197,57 +329,52 @@ export default {
     return{
       tab: null,
       openHelp: false,
+      openImport: false,
       openSubmit: false,
+      openConfirmSubmit: false,
       openError: false,
+      idImport: '',
+      required: [(v) => !!v || "Field is required"],
       items: [
         { tab: 'Caracterizacão'},
         { tab: 'Subdomínios'},
-        { tab: 'Avaliação'}
+        { tab: 'Comportamento'}
       ],
-      questao:{
+      domain:{
         id: '',
-        language: "pt",
-        study_cycle: '',
+        description: 'pt',
         scholarity: '',
-        domain: '',
-        subdomain: '',
-        subsubdomain: '',
-        difficulty_level: '',
-        author: '',
-        display_mode: '',
-        answering_time: '',
-        type: '',
-        precedence: [],
-        repetitions: '',
-        header:'',
+        responsible: '',
+        notes: '',
+        access_type: '',
         body: [],
-        explanation: "",
-        images: "",
-        videos: "",
-        source: "",
-        notes: "",
-        status:"E",
+        default_user_level: '',
+        high_performance_factor: '',
+        low_performance_factor: '',
+        high_skill_factor: '',
+        low_skill_factor: '',
+        min_questions_number: '',
+        question_factor: '',
         inserted_by: "User_default",
-        inserted_at:new Date().toLocaleString(),
-        validated_by:"",
-        validated_at:""
+        inserted_at:new Date().toLocaleString()
       }
     }
   },
   methods:{
 
     handleDataDominios(e) {
-      [this.questao.id,this.questao.study_cycle,this.questao.scholarity,this.questao.domain,this.questao.subdomain,
-      this.questao.subsubdomain, this.questao.header, this.questao.difficulty_level,this.questao.author,this.questao.display_mode,
-      this.questao.answering_time,this.questao.type,this.questao.precedence,this.questao.repetitions] = e;
+      [this.domain.id,this.domain.description,this.domain.scholarity,this.domain.repsonsible,
+      this.domain.notes,this.domain.access_type] = e;
     },
 
     handleDataSubdominios(e) {
-      this.questao.body = e;
+      this.domain.body = e;
     },
 
-    handleDataAvaliacao(e) {
-      [this.questao.explanation,this.questao.notes,this.questao.source,this.questao.status,this.questao.language] = e;
+    handleDataComportamento(e) {
+      [this.domain.default_user_level,this.domain.high_performance_factor,this.domain.low_performance_factor
+      ,this.domain.high_skill_factor,this.domain.low_skill_factor,this.domain.min_questions_number,
+      this.domain.question_factor] = e;
     },
 
     confirmSubmit(){
@@ -260,17 +387,36 @@ export default {
     },
 
     submit(){
-        axios.post(`http://localhost:8001/question`, this.questao)
+        axios.post(`http://localhost:8001/domain`, this.domain)
           .then(function(response){
             console.log(response)
           });
         this.openSubmit = false
+        this.openConfirmSubmit = true
+        this.reset()
     },
 
     reset() {
       this.$refs.dm.reset()
       this.$refs.sm.reset()
-      this.$refs.av.reset()
+      this.$refs.cp.reset()
+    },
+
+    startImport() {
+      this.openImport = true
+    },
+
+    confirmImport(){
+      this.$root.$emit('import', this.idImport)
+      console.log(this.idImport)
+    },
+
+    closeImport() {
+      this.openImport = false
+    },
+
+    closeConfirmSubmit() {
+      this.openConfirmSubmit = false
     },
 
     help() {

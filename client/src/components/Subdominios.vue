@@ -121,6 +121,41 @@
           </v-card>
         </v-dialog>
 
+        <!--Janela de Aviso na Inserção de Subdominio -->
+        <v-dialog v-model="dialogSub" max-width="400px">
+          <v-card>
+            <v-app-bar color="#2A3F54" >
+              <div class="d-flex align-center">
+                <h3 width="40" class="white--text"> Aviso </h3>
+              </div>
+            </v-app-bar>
+            <v-container>
+              <v-row>
+                
+                <v-col cols="12">
+                  <h3 class="ml-5 mt-5">Para adicionar um novo Subdomínio, todos os campos têm que estar preenchidos!</h3>
+                </v-col>
+              </v-row>
+            </v-container>
+            <v-card-actions>
+              <v-container>
+                <v-row >
+                    <v-col class="text-right">
+                      <v-tooltip bottom>
+                        <template v-slot:activator="{ on, attrs }">
+                          <v-btn color="#29E898" @click="closeSub" v-bind="attrs" v-on="on" elevation="5">
+                            <v-icon color="white">mdi-door-open</v-icon>
+                          </v-btn>
+                        </template>
+                        <span>Sair</span>
+                      </v-tooltip>
+                    </v-col>
+                  </v-row>              
+              </v-container>
+            </v-card-actions>
+          </v-card>
+       </v-dialog>
+
         <!--Janela para Remoção de Subdomínio -->
         <v-dialog v-model="dialogDelete" max-width="500px">
           <v-card>
@@ -174,7 +209,7 @@
 </template>
 
 <script>
-
+import axios from 'axios';
 export default {
     data() {
         return {
@@ -184,6 +219,7 @@ export default {
             firstSub: false,
             editing: false,
             dialogEdit: false,
+            dialogSub: false,
             dialogDelete: false,
             formData: {
                 body: [],
@@ -211,10 +247,26 @@ export default {
             ],
         }
     },
+  
+    created() {
+      if(this.$route.params.data!=null){
+        let data = this.$route.params.data
+            this.formData.body = data.body         
+      }  
+    },
+
     mounted() {
       this.$root.$on('change', data => {
             this.idDominio = data.sendId
             this.description = data.sendDescription
+      })
+      this.$root.$on('import', data => {
+            axios.get(`http://localhost:8001/domain/`+ data)
+              .then((response)=>{
+                this.formData.body = response.data.body
+              },(error) =>{
+                  console.log(error);
+              });
       })
     },
 
@@ -230,10 +282,14 @@ export default {
       },
 
       addSubdominio(){
-        this.formData.body.push(this.subdominio);
-        this.subdominio = Object.assign({}, this.defaultSub)
-        if(!this.firstSub){
-          this.firstSub = true
+        if(this.subdominio.designation != "" && this.subdominio.description != ""){
+          this.formData.body.push(this.subdominio);
+          this.subdominio = Object.assign({}, this.defaultSub)
+          if(!this.firstSub){
+            this.firstSub = true
+          }
+        }else{
+          this.dialogSub = true
         }
       },
 
@@ -260,13 +316,23 @@ export default {
       },    
       
       deleteConfirm(){
-        this.formData.body.splice(this.editedIndex, 1)
-        this.closeDelete()
+        if(this.editedIndex == 0){
+          this.formData.body.splice(this.editedIndex, 1)
+          this.firstSub = false
+          this.closeDelete()
+        }else{
+          this.formData.body.splice(this.editedIndex, 1)
+          this.closeDelete()
+        }
       },
 
       closeDelete(){
         this.dialogDelete = false
         this.editedIndex = -1
+      },
+
+      closeSub () {
+        this.dialogSub = false
       },
     },
     watch: {
