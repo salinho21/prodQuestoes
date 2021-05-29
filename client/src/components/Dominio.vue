@@ -150,7 +150,7 @@ export default {
   methods: {
 
     checkID(item){
-      return !this.idQuestoes.find(x => x === item)
+      return !this.idDomains.find(x => x === item)
     },
 
     reset () {

@@ -10,10 +10,10 @@
       <v-row>
         <v-col cols="8">
           <div v-if="firstSub">
-            <v-text-field class="mt-4" v-model="subdominio.designation" :counter="200" label="Subdomínio"></v-text-field>
+            <v-text-field class="mt-4" v-model="subdominio.subdomain" :counter="200" label="Subdomínio"></v-text-field>
           </div>
           <div v-else>
-            <v-text-field class="mt-4" v-model="subdominio.designation" :rules="rules.required" :counter="200" label="Subdomínio"></v-text-field>
+            <v-text-field class="mt-4" v-model="subdominio.subdomain" :rules="rules.required" :counter="200" label="Subdomínio"></v-text-field>
           </div>
         </v-col>
       </v-row>
@@ -21,10 +21,10 @@
       <v-row>
         <v-col cols="8">
           <div v-if="firstSub">
-            <v-textarea v-model="subdominio.description" label="Descrição" counter outlined auto-grow background-color="#f2f2fc" color="#2A3F54" rows="3" placeholder="Introduza uma Descrição para o Subdomínio"></v-textarea>
+            <v-textarea v-model="subdominio.sub_description" label="Descrição" counter outlined auto-grow background-color="#f2f2fc" color="#2A3F54" rows="3" placeholder="Introduza uma Descrição para o Subdomínio"></v-textarea>
           </div>
           <div v-else>
-            <v-textarea v-model="subdominio.description" label="Descrição" counter outlined auto-grow background-color="#f2f2fc" color="#2A3F54" rows="3" :rules="rules.required" placeholder="Introduza uma Descrição para o Subdomínio"></v-textarea>
+            <v-textarea v-model="subdominio.sub_description" label="Descrição" counter outlined auto-grow background-color="#f2f2fc" color="#2A3F54" rows="3" :rules="rules.required" placeholder="Introduza uma Descrição para o Subdomínio"></v-textarea>
           </div>
         </v-col>
       </v-row>
@@ -46,12 +46,12 @@
             {{ props.index+1 }}
           </template>
 
-          <template v-slot:[`item.designation`]="{ item }">
-            {{ item.designation.length > 15 ? item.designation.slice(0, 15) + '...' : item.designation }}
+          <template v-slot:[`item.subdomain`]="{ item }">
+            {{ item.subdomain.length > 15 ? item.subdomain.slice(0, 15) + '...' : item.subdomain }}
           </template>
 
-          <template v-slot:[`item.description`]="{ item }">
-            {{ item.description.length > 15 ? item.description.slice(0, 15) + '...' : item.description }}
+          <template v-slot:[`item.sub_description`]="{ item }">
+            {{ item.sub_description.length > 15 ? item.sub_description.slice(0, 15) + '...' : item.sub_description }}
           </template>
 
           <template v-slot:[`item.actions`]="{ item }">
@@ -241,8 +241,8 @@ export default {
             },
             headers: [
                 { text: "Número", align: "start", sortable: false, value: "index" },
-                { text: "Designação",  sortable: false, value: "designation" },
-                { text: "Descrição",  sortable: false, value: "description" },
+                { text: "Subdomínio",  sortable: false, value: "subdomain" },
+                { text: "Descrição",  sortable: false, value: "sub_description" },
                 { text: "Actions", sortable: false, value: "actions"},
             ],
         }
@@ -250,6 +250,8 @@ export default {
   
     created() {
       if(this.$route.params.data!=null){
+        console.log("Edição de questão")
+        console.log(this.$route.params.data)
         let data = this.$route.params.data
             this.formData.body = data.body         
       }  
@@ -282,7 +284,7 @@ export default {
       },
 
       addSubdominio(){
-        if(this.subdominio.designation != "" && this.subdominio.description != ""){
+        if(this.subdominio.subdomain != "" && this.subdominio.sub_description != ""){
           this.formData.body.push(this.subdominio);
           this.subdominio = Object.assign({}, this.defaultSub)
           if(!this.firstSub){

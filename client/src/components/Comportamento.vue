@@ -118,8 +118,10 @@ export default ({
     watch: {
         formData: {
             handler: function() {
-              this.$emit('newdataComportamento', [this.formData.explanation,this.formData.notes,
-              this.formData.source,this.formData.status,this.formData.language]);            
+              this.$emit('newdataComportamento', [this.formData.default_user_level,
+              this.formData.high_performance_factor,this.formData.low_performance_factor,
+              this.formData.high_skill_factor,this.formData.low_skill_factor,
+              this.formData.min_questions_number,this.formData.question_factor]);            
           },
             deep: true
         }

@@ -26,13 +26,13 @@
                   </v-tabs>
                   <v-tabs-items v-model="tab">
                    <v-tab-item eager> 
-                      <Dominio ref="dm" @newdataCaracterizacao="handleDataDominios($event)"/>
+                      <Dominio ref="dm" @newdataDominio="handleDataDominios($event)"/>
                    </v-tab-item>
                    <v-tab-item eager>
-                      <Subdominios ref="sm" @newdataRespostas="handleDataSubdominios($event)"/>
+                      <Subdominios ref="sm" @newdataSubdominio="handleDataSubdominios($event)"/>
                    </v-tab-item>
                    <v-tab-item eager>
-                      <Comportamento ref="cp" @newdataSuporte="handleDataComportamento($event)"/>
+                      <Comportamento ref="cp" @newdataComportamento="handleDataComportamento($event)"/>
                    </v-tab-item>
                  </v-tabs-items>
               </v-card>
@@ -363,7 +363,7 @@ export default {
   methods:{
 
     handleDataDominios(e) {
-      [this.domain.id,this.domain.description,this.domain.scholarity,this.domain.repsonsible,
+      [this.domain.id,this.domain.description,this.domain.scholarity,this.domain.responsible,
       this.domain.notes,this.domain.access_type] = e;
     },
 
@@ -379,6 +379,9 @@ export default {
 
     confirmSubmit(){
       if(this.$refs.dm.validate() && this.$refs.sm.validate() && this.$refs.cp.validate()){
+        console.log(this.$refs.dm.validate())
+        console.log(this.$refs.sm.validate())
+        console.log(this.$refs.cp.validate())
         this.openSubmit = true
       }
       else{
