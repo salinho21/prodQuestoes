@@ -357,6 +357,25 @@ export default {
         question_factor: '',
         inserted_by: "User_default",
         inserted_at:new Date().toLocaleString()
+      },
+      edit:{
+        _id:null,
+        id: '',
+        description: 'pt',
+        scholarity: '',
+        responsible: '',
+        notes: '',
+        access_type: '',
+        body: [],
+        default_user_level: '',
+        high_performance_factor: '',
+        low_performance_factor: '',
+        high_skill_factor: '',
+        low_skill_factor: '',
+        min_questions_number: '',
+        question_factor: '',
+        inserted_by: "User_default",
+        inserted_at:new Date().toLocaleString()
       }
     }
   },
@@ -364,7 +383,7 @@ export default {
 
     handleDataDominios(e) {
       [this.domain.id,this.domain.description,this.domain.scholarity,this.domain.responsible,
-      this.domain.notes,this.domain.access_type] = e;
+      this.domain.notes,this.domain.access_type,this.editing,this.edit._id] = e;
     },
 
     handleDataSubdominios(e) {
@@ -379,9 +398,6 @@ export default {
 
     confirmSubmit(){
       if(this.$refs.dm.validate() && this.$refs.sm.validate() && this.$refs.cp.validate()){
-        console.log(this.$refs.dm.validate())
-        console.log(this.$refs.sm.validate())
-        console.log(this.$refs.cp.validate())
         this.openSubmit = true
       }
       else{
@@ -390,19 +406,44 @@ export default {
     },
 
     submit(){
+      console.log(this.editing)
+      if(this.editing == false){
+        console.log("entrei no true")
         axios.post(`http://localhost:8001/domain`, this.domain)
-          .then(function(response){
-            console.log(response)
-          });
-        this.openSubmit = false
-        this.openConfirmSubmit = true
-        this.reset()
-    },
+            .then(function(response){
+              console.log(response)
+            },(error) =>{
+                console.log(error);
+          }); 
+      }else{
+        console.log("entrei no false")
+        this.edit.id = this.domain.id
+        this.edit.description = this.domain.description
+        this.edit.scholarity = this.domain.scholarity
+        this.edit.responsible = this.domain.responsible
+        this.edit.notes = this.domain.notes
+        this.edit.access_type = this.domain.access_type
+        this.edit.body = this.domain.body
+        this.edit.default_user_level = this.domain.default_user_level
+        this.edit.high_performance_factor = this.domain.high_performance_factor
+        this.edit.low_performance_factor = this.domain.low_performance_factor
+        this.edit.high_skill_factor = this.domain.high_skill_factor
+        this.edit.low_skill_factor= this.domain.low_skill_factor
+        this.edit.min_questions_number = this.domain.min_questions_number
+        this.edit.question_factor = this.domain.question_factor
+        this.edit.inserted_by = this.domain.inserted_by
+        this.edit.inserted_at = this.domain.inserted_at
 
-    reset() {
-      this.$refs.dm.reset()
-      this.$refs.sm.reset()
-      this.$refs.cp.reset()
+        axios.put(`http://localhost:8001/domain`, this.edit)
+            .then(function(response){
+              console.log(response)
+            },(error) =>{
+                console.log(error);
+          }); 
+      } 
+      this.openSubmit = false
+      this.openConfirmSubmit = true
+      this.reset()
     },
 
     startImport() {
@@ -411,7 +452,7 @@ export default {
 
     confirmImport(){
       this.$root.$emit('import', this.idImport)
-      console.log(this.idImport)
+      this.openImport = false
     },
 
     closeImport() {

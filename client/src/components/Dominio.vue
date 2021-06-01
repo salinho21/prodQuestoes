@@ -89,6 +89,7 @@ export default {
       },
       valid: false,
       formData:{
+          _id: '',
           id: '',
           description: '',
           scholarity: '',
@@ -121,6 +122,7 @@ export default {
     if(this.$route.params.data!=null){
       this.editing = true
       let data = this.$route.params.data
+          this.formData._id = data._id
           this.formData.id = data.id
           this.formData.description = data.description
           this.formData.scholarity = data.scholarity
@@ -134,6 +136,7 @@ export default {
     this.$root.$on('import', data => {
             axios.get(`http://localhost:8001/domain/`+ data)
               .then((response)=>{
+                this.formData._id = response.data._id
                 this.formData.id = response.data.id,
                 this.formData.description = response.data.description,
                 this.formData.scholarity = response.data.scholarity,
@@ -171,7 +174,7 @@ export default {
       formData: {
           handler: function() {
             this.$emit('newdataDominio', [this.formData.id,this.formData.description,this.formData.scholarity,
-            this.formData.responsible,this.formData.notes,this.formData.access_type]);         
+            this.formData.responsible,this.formData.notes,this.formData.access_type,this.editing,this.formData._id]);         
         },
           deep: true
       }

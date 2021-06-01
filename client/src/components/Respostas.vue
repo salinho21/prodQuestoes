@@ -326,8 +326,7 @@ export default {
     },
     created() {
       if(this.$route.params.data!=null){
-        console.log("Edição de questão")
-        console.log(this.$route.params.data)
+        this.firstResposta = true
         let data = this.$route.params.data
             this.formData.body = data.body         
       }  
@@ -342,6 +341,7 @@ export default {
       this.$root.$on('import', data => {
             axios.get(`http://localhost:8001/question/`+ data)
               .then((response)=>{
+                this.firstResposta = true
                 this.formData.body = response.data.body
               },(error) =>{
                   console.log(error);

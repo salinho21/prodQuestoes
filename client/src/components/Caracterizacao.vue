@@ -139,6 +139,7 @@ export default {
       },
       valid: false,
       formData:{
+          _id: '',
           id: '',
           study_cycle: '',
           scholarity: '',
@@ -180,6 +181,7 @@ export default {
     if(this.$route.params.data!=null){
       this.editing = true
       let data = this.$route.params.data
+          this.formData._id = data._id
           this.formData.id = data.id
           this.formData.study_cycle = data.study_cycle
           this.formData.scholarity = data.scholarity
@@ -201,18 +203,19 @@ export default {
     this.$root.$on('import', data => {
             axios.get(`http://localhost:8001/question/`+ data)
               .then((response)=>{
-                this.formData.id = response.data.id,
-                this.formData.study_cycle = response.data.study_cycle,
-                this.formData.scholarity = response.data.scholarity,
-                this.formData.domain = response.data.domain,
-                this.formData.subdomain = response.data.subdomain,
-                this.formData.subsubdomain = response.data.subsubdomain,
-                this.formData.difficulty_level = response.data.difficulty_level,
-                this.formData.author = response.data.author,
-                this.formData.display_mode = response.data.display_mode, 
-                this.formData.answering_time = response.data.answering_time,
-                this.formData.type = response.data.type,
-                this.formData.precedence = response.data.precedence,
+                this.formData._id = response.data._id
+                this.formData.id = response.data.id
+                this.formData.study_cycle = response.data.study_cycle
+                this.formData.scholarity = response.data.scholarity
+                this.formData.domain = response.data.domain
+                this.formData.subdomain = response.data.subdomain
+                this.formData.subsubdomain = response.data.subsubdomain
+                this.formData.difficulty_level = response.data.difficulty_level
+                this.formData.author = response.data.author
+                this.formData.display_mode = response.data.display_mode,
+                this.formData.answering_time = response.data.answering_time
+                this.formData.type = response.data.type
+                this.formData.precedence = response.data.precedence
                 this.formData.repetitions = response.data.repetitions
                 this.formData.header = response.data.header
                 this.editing = true
@@ -248,7 +251,7 @@ export default {
           handler: function() {
             this.$emit('newdataCaracterizacao', [this.formData.id,this.formData.study_cycle,this.formData.scholarity,this.formData.domain,
             this.formData.subdomain,this.formData.subsubdomain,this.formData.header,this.formData.difficulty_level,this.formData.author,
-            this.formData.display_mode,this.formData.answering_time,this.formData.type,this.formData.precedence,this.formData.repetitions]);
+            this.formData.display_mode,this.formData.answering_time,this.formData.type,this.formData.precedence,this.formData.repetitions,this.editing,this.formData._id]);
         },
           deep: true
       },

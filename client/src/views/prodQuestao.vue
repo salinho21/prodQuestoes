@@ -334,6 +334,7 @@ export default {
       openConfirmSubmit: false,
       openError: false,
       idImport: '',
+      editing: false,
       required: [(v) => !!v || "Field is required"],
       items: [
         { tab: 'Caracterizacão'},
@@ -341,6 +342,35 @@ export default {
         { tab: 'Suporte'}
       ],
       questao:{
+        id: '',
+        language: "pt", 
+        study_cycle: '',
+        scholarity: '',
+        domain: '',
+        subdomain: '',
+        subsubdomain: '',
+        difficulty_level: '',
+        author: '',
+        display_mode: '', 
+        answering_time: '',
+        type: '',
+        precedence: [], 
+        repetitions: '',
+        header:'',
+        body: [], 
+        explanation: "", 
+        images: "", 
+        videos: "", 
+        source: "", 
+        notes: "", 
+        status:"E", 
+        inserted_by: "User_default", 
+        inserted_at:new Date().toLocaleString(), 
+        validated_by:"", 
+        validated_at:"" 
+      },
+      edit:{
+        _id: null,
         id: '',
         language: "pt", 
         study_cycle: '',
@@ -376,7 +406,7 @@ export default {
     handleDataCaracterizacao(e) {
       [this.questao.id,this.questao.study_cycle,this.questao.scholarity,this.questao.domain,this.questao.subdomain,
       this.questao.subsubdomain, this.questao.header, this.questao.difficulty_level,this.questao.author,this.questao.display_mode,
-      this.questao.answering_time,this.questao.type,this.questao.precedence,this.questao.repetitions] = e;
+      this.questao.answering_time,this.questao.type,this.questao.precedence,this.questao.repetitions,this.editing,this.edit._id] = e;
     },
 
     handleDataRespostas(e) {
@@ -397,15 +427,51 @@ export default {
     },
 
     submit(){
+      if(this.editing == false){
         axios.post(`http://localhost:8001/question`, this.questao)
-          .then(function(response){
-            console.log(response)
-          },(error) =>{
-              console.log(error);
-        }); 
-        this.openSubmit = false
-        this.openConfirmSubmit = true
-        this.reset()
+            .then(function(response){
+              console.log(response)
+            },(error) =>{
+                console.log(error);
+          }); 
+      }else{
+        this.edit.id = this.questao.id
+        this.edit.language = this.questao.language
+        this.edit.study_cycle = this.questao.study_cycle
+        this.edit.scholarity = this.questao.scholarity
+        this.edit.domain = this.questao.domain
+        this.edit.subdomain = this.questao.subdomain
+        this.edit.subsubdomain = this.questao.subsubdomain
+        this.edit.difficulty_level = this.questao.difficulty_level
+        this.edit.author = this.questao.author
+        this.edit.display_mode = this.questao.display_mode
+        this.edit.answering_time = this.questao.answering_time
+        this.edit.type = this.questao.type
+        this.edit.precedence = this.questao.precedence
+        this.edit.repetitions = this.questao.repetitions
+        this.edit.header = this.questao.header
+        this.edit.body = this.questao.body
+        this.edit.explanation = this.questao.explanation
+        this.edit.images = this.questao.images
+        this.edit.videos = this.questao.videos
+        this.edit.source = this.questao.source
+        this.edit.notes = this.questao.notes
+        this.edit.status = this.questao.status
+        this.edit.inserted_by = this.questao.inserted_by
+        this.edit.inserted_at = this.questao.inserted_at
+        this.edit.validated_by = this.questao.validated_by
+        this.edit.validated_at = this.questao.validated_at
+      
+        axios.put(`http://localhost:8001/question`, this.edit)
+            .then(function(response){
+              console.log(response)
+            },(error) =>{
+                console.log(error);
+          }); 
+      } 
+      this.openSubmit = false
+      this.openConfirmSubmit = true
+      this.reset()
     },
 
     reset() {
@@ -415,44 +481,8 @@ export default {
     },
 
     confirmImport(){
-      /*console.log(this.idImport)
-      if(this.idImport!=''){
-        console.log(this.idImport)
-        axios.get(`http://localhost:8001/question/`+this.idImport)
-          .then((response)=>{
-            console.log(response.data.id)
-            this.questao.id = response.data.id,
-            this.questao.language = response.data.language, 
-            this.questao.study_cycle = response.data.study_cycle,
-            this.questao.scholarity = response.data.scholarity,
-            this.questao.domain = response.data.domain,
-            this.questao.subdomain = response.data.subdomain,
-            this.questao.subsubdomain = response.data.subsubdomain,
-            this.questao.difficulty_level = response.data.difficulty_level,
-            this.questao.author = response.data.author,
-            this.questao.display_mode = response.data.id, 
-            this.questao.answering_time = response.data.answering_time,
-            this.questao.type = response.data.type,
-            this.questao.precedence = response.data.precedence,
-            this.questao.repetitions = response.data.repetitions
-            this.questao.header = response.data.header,
-            this.questao.body = response.data.body,
-            this.questao.explanation = response.data.explanation,
-            this.questao.images = response.data.images,
-            this.questao.videos = response.data.videos,
-            this.questao.source = response.data.source,
-            this.questao.notes = response.data.notes,
-            this.questao.status = response.data.status
-            console.log(response.data)
-          },(error) =>{
-              console.log(error);
-        });
-        this.openImport = false
-      }else{
-        console.log('Erro')
-      }*/
       this.$root.$emit('import', this.idImport)
-      console.log(this.idImport)
+      this.openImport = false
     },
 
     startImport() {

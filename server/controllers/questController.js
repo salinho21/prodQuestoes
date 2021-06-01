@@ -25,5 +25,5 @@ module.exports.remover = function(id){
 }
 
 module.exports.alterar = function(q){
-    return Question.findByIdAndUpdate({_id: q.id}, q, {new: true})
+    return Question.findByIdAndUpdate({_id: q._id}, q, {new: true})
 }

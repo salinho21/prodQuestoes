@@ -25,5 +25,5 @@ module.exports.remover = function(id){
 }
 
 module.exports.alterar = function(d){
-    return Domain.findByIdAndUpdate({_id: d.id}, d, {new: true})
+    return Domain.findByIdAndUpdate({_id: d._id}, d, {new: true})
 }
