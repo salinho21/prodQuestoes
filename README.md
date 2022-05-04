@@ -4,6 +4,8 @@
 This project develops and implements the production and importing of questions to evaluate students of the LEONARDO platform.
 LEONARDO was created by the professor Orlando Belo and aims to help students realize their level of knowledgement by taking a series of quizzes.
 
+This project uses express from Node, Vue framework and MongoDB.
+
 
 # Project Setup
 # client
